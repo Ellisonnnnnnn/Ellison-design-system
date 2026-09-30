@@ -1,0 +1,912 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FEF5DC">
+  <title>Esther Design System · 设计系统总览</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500;1,6..96,600;1,6..96,700&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --olive: #4B5320;
+      --olive-deep: #323D2E;
+      --lake: #5FA8C2;
+      --wine: #7D2027;
+      --wine-deep: #911A1D;
+      --rust: #CF5527;
+      --antique: #998731;
+      --coffee: #572013;
+      --earth: #673C34;
+      --chestnut: #63493E;
+      --brick: #911A1D;
+      --cream: #FEF5DC;
+      --sand-warm: #FAE3B1;
+      --sand: #FEEDA7;
+      --stone: #EEEBE6;
+      --mist: #C5D1D8;
+      --powder-blue: #D3E6F7;
+      --ink: #572013;
+      --ink-soft: #63493E;
+      --ink-faint: #673C34;
+      --paper: #FEF5DC;
+      --line: rgba(87, 32, 19, .12);
+      --line-soft: rgba(87, 32, 19, .07);
+      --olive-wash: rgba(75, 83, 32, .08);
+      --sand-wash: rgba(254, 237, 167, .25);
+      --rust-wash: rgba(207, 85, 39, .08);
+      --dark: #323D2E;
+      --serif: "Noto Serif SC", "Songti SC", Georgia, serif;
+      --sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      --display: "Bodoni Moda", Georgia, serif;
+      --page-pad: clamp(22px, 4vw, 58px);
+      --section-space: clamp(76px, 10vw, 132px);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 86% 2%, rgba(254,237,167, .13), transparent 28rem),
+        var(--cream);
+      font: 15px/1.65 var(--sans);
+    }
+    ::selection { background: var(--sand); color: var(--ink); }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid var(--olive);
+      outline-offset: 4px;
+    }
+
+    .app-shell { min-height: 100vh; }
+    .sidebar {
+      position: fixed;
+      z-index: 20;
+      inset: 0 auto 0 0;
+      width: 226px;
+      padding: 25px 18px 22px;
+      display: flex;
+      flex-direction: column;
+      background: var(--cream);
+      border-right: 1px solid var(--line-soft);
+    }
+    .brand-lockup { display: flex; align-items: center; gap: 11px; padding: 2px 9px 28px; }
+    .brand-mark {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      position: relative;
+      background: var(--olive);
+      box-shadow: inset -8px -7px 0 rgba(21, 24, 33, .12);
+    }
+    .brand-mark::before, .brand-mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+    }
+    .brand-mark::before { width: 14px; height: 14px; background: var(--sand); top: -3px; right: -4px; }
+    .brand-mark::after { width: 7px; height: 7px; background: var(--rust); bottom: 2px; left: -2px; }
+    .brand-lockup strong { display: block; font: 700 14px/1.2 var(--serif); letter-spacing: .01em; }
+    .brand-lockup small { display: block; margin-top: 4px; color: var(--ink-faint); font: 10px/1.2 var(--display); letter-spacing: .08em; }
+    .rail-label { margin: 0 10px 10px; color: var(--ink-faint); font-size: 10px; letter-spacing: .08em; }
+    .side-nav { display: grid; gap: 3px; }
+    .side-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 11px;
+      border-radius: 8px;
+      color: var(--ink-soft);
+      font-size: 12px;
+      transition: background .18s ease, color .18s ease;
+    }
+    .side-nav a:hover, .side-nav a:focus-visible { color: var(--olive); background: var(--olive-wash); }
+    .side-nav a span { width: 19px; color: var(--ink-faint); font: italic 13px var(--display); }
+    .rail-note {
+      margin-top: auto;
+      padding: 15px 14px;
+      background: var(--cream-deep);
+      border-radius: 12px 12px 12px 3px;
+      font-size: 11px;
+      color: var(--ink-soft);
+    }
+    .rail-note strong { display: block; color: var(--ink); margin-bottom: 3px; font-size: 12px; }
+    .rail-note i { color: var(--rust); font-style: normal; }
+
+    .workspace { margin-left: 226px; min-width: 0; }
+    .topbar {
+      position: sticky;
+      z-index: 15;
+      top: 0;
+      min-height: 56px;
+      padding: 0 var(--page-pad);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(254, 252, 246, .94);
+      border-bottom: 1px solid var(--line-soft);
+      backdrop-filter: blur(12px);
+    }
+    .crumb { color: var(--ink-faint); font-size: 11px; }
+    .crumb b { color: var(--ink); font-weight: 600; }
+    .topbar-tag { display: flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 11px; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--olive); box-shadow: 0 0 0 4px var(--olive-wash); }
+    main { max-width: 1490px; margin: 0 auto; padding: 0 var(--page-pad) 50px; }
+
+    .hero {
+      min-height: 500px;
+      padding: clamp(44px, 7vw, 92px) 0 clamp(42px, 6vw, 74px);
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(420px, 1.1fr);
+      align-items: center;
+      gap: clamp(35px, 6vw, 88px);
+    }
+    .hero-copy { max-width: 570px; }
+    .hero-kicker { display: flex; align-items: center; gap: 10px; margin: 0 0 21px; color: var(--olive); font-size: 12px; font-weight: 600; }
+    .hero-kicker::before { content: ""; width: 28px; height: 3px; background: var(--sand); }
+    h1 {
+      margin: 0;
+      font: 900 clamp(2.8rem, 5.5vw, 5.25rem)/1.16 var(--serif);
+      letter-spacing: -.055em;
+    }
+    h1 em { color: var(--olive); font-style: normal; white-space: nowrap; }
+    .hero-copy > p {
+      max-width: 440px;
+      margin: 24px 0 0;
+      color: var(--ink-soft);
+      font-size: clamp(14px, 1.2vw, 16px);
+      line-height: 1.95;
+    }
+    .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 13px; margin-top: 29px; }
+    .primary-link, .text-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 43px;
+      padding: 0 18px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      transition: transform .18s ease, background .18s ease;
+    }
+    .primary-link { background: var(--olive); color: var(--paper); }
+    .primary-link:hover { background: var(--olive-deep); transform: translateY(-2px); }
+    .text-link { color: var(--ink-soft); padding-inline: 9px; }
+    .text-link:hover { color: var(--olive); }
+    .hero-index { margin-top: 37px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .hero-index span { padding: 6px 10px; border: 1px solid var(--line); border-radius: 20px; color: var(--ink-soft); font-size: 10px; }
+    .hero-index b { color: var(--ink); font-weight: 700; }
+
+    .specimen-board {
+      position: relative;
+      min-height: 400px;
+      padding: 21px;
+      background: var(--paper);
+      border: 1px solid rgba(87,32,19, .09);
+      box-shadow: 0 24px 60px rgba(43, 55, 70, .08);
+      transform: rotate(.65deg);
+    }
+    .specimen-board::before {
+      content: "";
+      position: absolute;
+      inset: -11px 11px 11px -11px;
+      border: 1.5px dashed rgba(75,83,32, .3);
+      pointer-events: none;
+    }
+    .board-head { display: flex; align-items: center; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid var(--line-soft); }
+    .board-head span { color: var(--ink-faint); font-size: 10px; }
+    .board-head b { font: italic 14px var(--display); color: var(--olive); }
+    .board-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 14px; padding-top: 17px; }
+    .board-type {
+      min-height: 177px;
+      padding: 19px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: var(--sand-warm);
+    }
+    .board-type small { color: var(--rust); font-size: 10px; }
+    .board-type strong { font: 700 clamp(24px, 3vw, 41px)/1.35 var(--serif); letter-spacing: -.04em; }
+    .board-type em { color: var(--olive); font-style: normal; }
+    .board-type span { color: var(--ink-faint); font: italic 14px var(--display); }
+    .swatch-stack { display: grid; gap: 8px; }
+    .swatch-line { display: flex; align-items: center; gap: 8px; min-height: 49px; padding: 7px 9px; background: var(--cream); }
+    .swatch-line i { width: 30px; height: 30px; border-radius: 50%; }
+    .swatch-line span { display: block; font-size: 10px; line-height: 1.35; }
+    .swatch-line small { color: var(--ink-faint); font-size: 9px; }
+    .board-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; margin-top: 14px; gap: 8px; }
+    .board-footer div { padding: 12px 10px; background: var(--cream); }
+    .board-footer b { display: block; font: 700 19px var(--display); color: var(--olive); }
+    .board-footer small { color: var(--ink-faint); font-size: 9px; }
+    .scribble { position: absolute; right: 14px; bottom: 14px; padding-top: 6px; border-top: 1px solid rgba(87,32,19,.28); color: var(--coffee); font: 10px var(--sans); letter-spacing: .03em; }
+
+    .quick-read {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .quick-read article { min-height: 95px; padding: 17px 18px; border-right: 1px solid var(--line-soft); }
+    .quick-read article:last-child { border-right: 0; }
+    .quick-read strong { display: block; font: 700 28px/1.1 var(--display); color: var(--olive); }
+    .quick-read span { color: var(--ink-soft); font-size: 11px; }
+    .quick-read small { color: var(--ink-faint); font-size: 9px; }
+
+    .section { padding-top: var(--section-space); scroll-margin-top: 74px; }
+    .section-heading { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 24px; align-items: start; margin-bottom: 35px; }
+    .section-number { padding-top: 9px; display: flex; align-items: center; gap: 9px; color: var(--olive); font: italic 15px var(--display); }
+    .section-number::after { content: ""; width: 23px; height: 2px; background: var(--sand); }
+    .section-heading h2 { margin: 0; font: 700 clamp(28px, 3.4vw, 42px)/1.25 var(--serif); letter-spacing: -.035em; }
+    .section-heading p { max-width: 650px; margin: 10px 0 0; color: var(--ink-soft); font-size: 13px; }
+    .eyebrow { margin: 0 0 8px; color: var(--rust); font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+
+    .brand-grid { display: grid; grid-template-columns: minmax(280px, .9fr) minmax(360px, 1.1fr); gap: 26px; align-items: stretch; }
+    .palette-panel { padding: clamp(22px, 3vw, 35px); background: var(--olive-deep); color: var(--paper); }
+    .panel-topline { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .panel-topline h3 { margin: 0; font: 700 17px var(--serif); }
+    .panel-topline small { color: rgba(254,245,220,.7); font-size: 10px; }
+    .ratio-bar { display: flex; height: 12px; gap: 3px; margin: 25px 0 16px; }
+    .ratio-bar span:nth-child(1) { flex: 6; background: var(--cream); }
+    .ratio-bar span:nth-child(2) { flex: 3; background: var(--olive); }
+    .ratio-bar span:nth-child(3) { flex: 1; background: var(--rust); }
+    .palette-list { display: grid; gap: 6px; }
+    .palette-item { display: grid; grid-template-columns: 34px 1fr auto; gap: 11px; align-items: center; padding: 9px 0; border-top: 1px solid rgba(255,255,255,.2); }
+    .palette-item i { width: 29px; height: 29px; border-radius: 50%; background: var(--swatch); border: 1px solid rgba(255,255,255,.55); }
+    .palette-item b { display: block; font-size: 11px; }
+    .palette-item small { display: block; color: rgba(255,255,255,.7); font-size: 9px; }
+    .palette-item code { color: rgba(255,255,255,.9); font: 10px var(--sans); }
+    .palette-extensions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin-top: 17px; }
+    .palette-extension { min-width: 0; padding: 8px; background: rgba(255,255,255,.08); }
+    .palette-extension i { display: block; height: 23px; margin-bottom: 7px; background: var(--swatch); }
+    .palette-extension b, .palette-extension code { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .palette-extension b { font-size: 9px; }
+    .palette-extension code { margin-top: 2px; color: rgba(255,255,255,.7); font: 8px var(--sans); }
+    .palette-foot { margin: 14px 0 0; color: rgba(255,255,255,.72); font-size: 10px; }
+    .type-panel { padding: clamp(22px, 3vw, 35px); border: 1px solid var(--line); background: var(--paper); display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; }
+    .type-sample { align-self: end; }
+    .type-sample .latin { display: block; color: var(--rust); font: 500 21px var(--display); }
+    .type-sample strong { display: block; margin-top: 8px; font: 700 clamp(25px, 3vw, 36px)/1.4 var(--serif); }
+    .type-sample p { max-width: 280px; margin: 13px 0 0; color: var(--ink-soft); font-size: 12px; line-height: 1.9; }
+    .type-roles { display: grid; gap: 0; align-self: stretch; }
+    .type-role { display: flex; flex-direction: column; justify-content: center; padding: 11px 0; border-bottom: 1px solid var(--line-soft); }
+    .type-role:last-child { border-bottom: 0; }
+    .type-role b { font-size: 11px; }
+    .type-role small { color: var(--ink-faint); font-size: 9px; }
+    .token-strip { display: grid; grid-template-columns: 1.2fr .8fr .8fr; gap: 12px; margin-top: 15px; }
+    .token { min-height: 93px; padding: 13px 15px; background: var(--cream-deep); position: relative; overflow: hidden; }
+    .token::after { content: ""; position: absolute; right: -16px; bottom: -26px; width: 72px; height: 72px; border: 1px dashed rgba(75,83,32,.25); border-radius: 50%; }
+    .token b { display: block; font: italic 14px var(--display); color: var(--olive); }
+    .token code { display: block; margin-top: 6px; color: var(--ink-soft); font: 9px var(--sans); }
+    .token small { color: var(--ink-faint); font-size: 9px; }
+    .principle-row { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 13px; border-top: 1px solid var(--line); }
+    .principle-row div { padding: 15px 12px 0 0; color: var(--ink-soft); font-size: 11px; }
+    .principle-row b { display: block; margin-bottom: 4px; color: var(--ink); font: 700 12px var(--serif); }
+    .gradient-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 24px; }
+    .gradient-chip { min-height: 96px; padding: 13px; display: flex; flex-direction: column; justify-content: space-between; color: var(--cream); }
+    .gradient-chip b { font: 600 12px var(--serif); }
+    .gradient-chip code { font: 8px var(--sans); opacity: .86; }
+    .gradient-chip.forest { background: linear-gradient(135deg, #323D2E, #9AA48C, #BCC7BE); color: var(--cream); }
+    .gradient-chip.sahara { background: linear-gradient(180deg, #59361E, #EDBA8D, #F7F7F7); color: var(--coffee); }
+    .gradient-chip.sea { background: linear-gradient(180deg, #096060, #075057, #D2ECF2); color: var(--cream); }
+
+    .guardrail {
+      margin-top: 25px;
+      padding: 17px 19px;
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      gap: 18px;
+      background: var(--cream-deep);
+      border-radius: 2px 14px 14px 2px;
+    }
+    .guardrail h3 { margin: 0; font: 700 14px var(--serif); }
+    .guardrail p { margin: 3px 0 0; color: var(--ink-faint); font-size: 10px; }
+    .guardrail-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .guardrail-list span { padding: 5px 9px; border-radius: 20px; color: var(--ink-soft); background: var(--paper); font-size: 10px; }
+    .guardrail-list .ban { color: #9d3342; background: var(--rust-wash); }
+
+    .scene-switcher { display: flex; flex-wrap: wrap; gap: 6px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+    .scene-tab {
+      padding: 9px 13px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+      background: transparent;
+      color: var(--ink-soft);
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .scene-tab[aria-selected="true"] { border-color: var(--olive); background: var(--olive); color: var(--paper); }
+    .scene-tab:hover:not([aria-selected="true"]) { background: var(--olive-wash); color: var(--olive); }
+    .scene-view {
+      display: none;
+      grid-template-columns: minmax(0, 1fr) minmax(255px, .65fr);
+      gap: clamp(24px, 5vw, 65px);
+      align-items: center;
+      min-height: 250px;
+      padding: 31px 4px 15px;
+    }
+    .scene-view.active { display: grid; }
+    .scene-copy h3 { margin: 0; font: 700 clamp(22px, 2.5vw, 30px)/1.4 var(--serif); }
+    .scene-copy p { max-width: 560px; color: var(--ink-soft); font-size: 12px; line-height: 1.85; }
+    .scene-copy ul { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0 0; padding: 0; list-style: none; }
+    .scene-copy li { padding: 5px 9px; border: 1px solid var(--line); color: var(--ink-soft); font-size: 10px; }
+    .scene-template {
+      min-height: 173px;
+      padding: 19px;
+      background: var(--cream-deep);
+      position: relative;
+      overflow: hidden;
+    }
+    .scene-template::after { content: ""; position: absolute; right: -20px; bottom: -30px; width: 116px; height: 116px; border: 1px dashed rgba(75,83,32,.35); border-radius: 50%; }
+    .scene-template small { display: block; margin-bottom: 12px; color: var(--rust); font-size: 9px; }
+    .scene-template strong { display: block; max-width: 225px; font: 700 20px/1.5 var(--serif); }
+    .scene-template code { position: absolute; z-index: 1; right: 15px; bottom: 13px; color: var(--ink-faint); font: 9px var(--sans); }
+
+    .layout-toolbar { display: flex; justify-content: space-between; align-items: end; gap: 15px; margin-bottom: 17px; }
+    .layout-toolbar p { margin: 0; color: var(--ink-soft); font-size: 11px; }
+    .layout-search { width: min(260px, 44vw); padding: 9px 12px; border: 1px solid var(--line); border-radius: 2px; background: var(--paper); font-size: 11px; }
+    .layout-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .layout-card {
+      min-width: 0;
+      padding: 13px;
+      background: var(--paper);
+      border: 1px solid var(--line-soft);
+      transition: border-color .16s ease, transform .16s ease;
+    }
+    .layout-card:hover { border-color: rgba(75,83,32,.5); transform: translateY(-2px); }
+    .layout-card[hidden] { display: none; }
+    .layout-name { min-height: 33px; margin: 10px 0 0; font-size: 11px; line-height: 1.5; font-weight: 600; }
+    .layout-num { color: var(--rust); font: italic 11px var(--display); }
+    .layout-note { margin: 3px 0 0; color: var(--ink-faint); font-size: 9px; line-height: 1.45; }
+    .layout-thumb {
+      height: 78px;
+      padding: 8px;
+      display: grid;
+      gap: 5px;
+      background: #f6f3e9;
+      overflow: hidden;
+    }
+    .layout-thumb i, .layout-thumb b { display: block; min-width: 0; border-radius: 1px; background: rgba(75,83,32,.45); }
+    .layout-thumb i:nth-child(even) { background: rgba(254,237,167,.92); }
+    .layout-thumb b { background: rgba(207,85,39,.66); }
+    .layout-thumb[data-kind="split"] { grid-template-columns: 1fr 1.15fr; grid-template-rows: 1fr; }
+    .layout-thumb[data-kind="split"] i:first-child { margin: 12px 0; }
+    .layout-thumb[data-kind="sticky"] { grid-template-columns: .32fr 1fr; }
+    .layout-thumb[data-kind="sticky"] i:first-child { background: rgba(75,83,32,.15); border-right: 2px solid var(--olive); }
+    .layout-thumb[data-kind="cards"] { grid-template-columns: repeat(3,1fr); }
+    .layout-thumb[data-kind="steps"] { grid-template-columns: 1fr; }
+    .layout-thumb[data-kind="steps"] i { width: 75%; position: relative; }
+    .layout-thumb[data-kind="steps"] i::after { content: ""; position: absolute; left: -4px; top: 0; width: 4px; height: 100%; background: var(--rust); }
+    .layout-thumb[data-kind="timeline"] { grid-template-columns: 1fr 1fr 1fr; align-items: center; background: linear-gradient(90deg, transparent 49%, var(--rust) 49%, var(--rust) 51%, transparent 51%), #f6f3e9; }
+    .layout-thumb[data-kind="dark"] { grid-template-columns: 1fr 1fr; background: var(--dark); }
+    .layout-thumb[data-kind="dark"] i, .layout-thumb[data-kind="dark"] b { background: var(--sand); }
+    .layout-thumb[data-kind="center"] { grid-template-columns: 1fr; justify-items: center; padding: 12px 22px; }
+    .layout-thumb[data-kind="center"] i { width: 80%; }
+    .layout-thumb[data-kind="radial"] { display: flex; align-items: center; justify-content: center; position: relative; }
+    .layout-thumb[data-kind="radial"] b { width: 24px; height: 24px; border-radius: 50%; z-index: 1; }
+    .layout-thumb[data-kind="radial"] i { position: absolute; width: 70%; height: 2px; }
+    .layout-thumb[data-kind="brand"] { grid-template-columns: 1.4fr .6fr; background: var(--olive); }
+    .layout-thumb[data-kind="brand"] i, .layout-thumb[data-kind="brand"] b { background: var(--sand); }
+    .layout-thumb[data-kind="horizontal"] { grid-template-columns: repeat(3, 1fr); overflow: hidden; }
+    .layout-thumb[data-kind="horizontal"] i { min-width: 24px; }
+    .layout-thumb[data-kind="symmetric"] { grid-template-columns: 1fr 1fr; }
+    .layout-thumb[data-kind="tabs"] { grid-template-columns: 1fr; grid-template-rows: 10px 1fr; }
+    .layout-thumb[data-kind="tabs"] i:first-child { border-bottom: 3px solid var(--rust); }
+    .layout-thumb[data-kind="canvas"] { display: block; position: relative; background-image: radial-gradient(rgba(75,83,32,.24) 1px, transparent 1px); background-size: 9px 9px; }
+    .layout-thumb[data-kind="canvas"] i { position: absolute; width: 25px; height: 18px; border: 1px solid var(--olive); }
+    .layout-thumb[data-kind="canvas"] i:nth-child(1) { top: 9px; left: 12px; }
+    .layout-thumb[data-kind="canvas"] i:nth-child(2) { top: 28px; left: 42px; }
+    .layout-thumb[data-kind="canvas"] i:nth-child(3) { top: 13px; left: 73px; }
+    .layout-thumb[data-kind="editorial"] { grid-template-columns: .28fr 1fr; }
+    .layout-thumb[data-kind="editorial"] i:first-child { background: rgba(207,85,39,.15); }
+
+    .component-playground { display: grid; grid-template-columns: minmax(0, 1fr) minmax(310px, .85fr); gap: 23px; align-items: stretch; }
+    .component-exhibit { min-height: 365px; padding: clamp(21px, 3vw, 34px); background: var(--dark); color: var(--paper); display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+    .component-exhibit::before { content: "03"; position: absolute; right: 12px; top: -38px; color: rgba(254,237,167,.13); font: italic 150px/1 var(--display); }
+    .exhibit-label { position: relative; z-index: 1; color: var(--sand); font-size: 10px; }
+    .quote-demo { position: relative; z-index: 1; max-width: 570px; margin: 28px 0; font: 700 clamp(23px, 3.2vw, 39px)/1.5 var(--serif); }
+    .quote-demo span { color: var(--sand); }
+    .exhibit-credit { position: relative; z-index: 1; display: flex; align-items: center; gap: 11px; color: rgba(254,245,220,.62); font-size: 10px; }
+    .avatar-dot { width: 31px; height: 31px; border-radius: 50%; background: var(--sand); color: var(--ink); display: grid; place-items: center; font: 700 13px var(--serif); }
+    .demo-stack { display: grid; gap: 12px; }
+    .demo-card { padding: 20px; background: var(--paper); border: 1px solid var(--line-soft); }
+    .demo-card h3 { margin: 0 0 12px; font: 700 14px var(--serif); }
+    .step-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; align-items: center; }
+    .step-row span { padding: 9px 8px; background: var(--cream-deep); text-align: center; font-size: 10px; }
+    .step-row b { display: block; color: var(--olive); font: italic 12px var(--display); }
+    .step-row i { color: var(--rust); font-style: normal; text-align: center; }
+    .highlighter-demo { max-width: 330px; margin: 0; font: 600 18px/1.8 var(--serif); }
+    .highlighter-demo mark { color: var(--ink); background: linear-gradient(transparent 58%, var(--sand) 58%); padding: 0 .08em; }
+    .catalog-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 27px 0 13px; }
+    .catalog-toolbar p { margin: 0; color: var(--ink-soft); font-size: 11px; }
+    .catalog-search { width: min(290px, 50vw); padding: 9px 12px; border: 1px solid var(--line); border-radius: 2px; background: var(--paper); font-size: 11px; }
+    .component-catalog { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 7px; }
+    .component-entry { min-height: 62px; padding: 10px 11px; background: var(--cream-deep); display: flex; gap: 9px; align-items: flex-start; border-bottom: 2px solid transparent; color: inherit; text-decoration: none; }
+    .component-entry:hover { border-bottom-color: var(--sand); }
+    .component-entry:focus-visible { outline: 2px solid var(--olive); outline-offset: 2px; }
+    .component-entry[hidden] { display: none; }
+    .component-entry span { flex: 0 0 22px; color: var(--olive); font: italic 11px var(--display); }
+    .component-entry b { font-size: 10px; line-height: 1.5; font-weight: 500; }
+    .catalog-empty { display: none; grid-column: 1/-1; padding: 22px; text-align: center; color: var(--ink-faint); font-size: 12px; }
+    .catalog-empty.show { display: block; }
+    .component-gallery-head { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: 20px 0 24px; padding: 17px 19px; background: var(--cream-deep); border-left: 3px solid var(--olive); }
+    .component-gallery-head h3 { margin: 0; font: 700 16px var(--serif); }
+    .component-gallery-head p { margin: 5px 0 0; color: var(--ink-soft); font-size: 11px; }
+    .component-gallery-head a { flex: 0 0 auto; padding: 10px 14px; background: var(--olive); color: var(--paper); font-size: 11px; text-decoration: none; }
+    .component-gallery-head a:hover { background: var(--ink); }
+
+    .delivery-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; }
+    .template-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .template-item { min-height: 88px; padding: 14px; background: var(--paper); border: 1px solid var(--line-soft); }
+    .template-item:first-child { grid-column: span 2; background: var(--olive); color: var(--paper); }
+    .template-item b { display: block; font: 700 13px var(--serif); }
+    .template-item small { display: block; margin-top: 7px; opacity: .7; font-size: 9px; }
+    .template-item code { display: block; margin-top: 5px; font: 9px var(--sans); opacity: .72; }
+    .checklist-panel { padding: 21px; background: var(--cream-deep); }
+    .checklist-panel h3 { margin: 0 0 15px; font: 700 15px var(--serif); }
+    .priority { display: grid; grid-template-columns: 43px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+    .priority strong { color: var(--rust); font: italic 13px var(--display); }
+    .priority:nth-of-type(2) strong { color: var(--olive); }
+    .priority:nth-of-type(3) strong { color: #8a791b; }
+    .priority p { margin: 0; color: var(--ink-soft); font-size: 10px; line-height: 1.7; }
+
+    .workflow { display: grid; grid-template-columns: repeat(7, minmax(90px, 1fr)); gap: 8px; counter-reset: step; }
+    .workflow article { counter-increment: step; min-height: 142px; padding: 14px 12px; border-top: 3px solid var(--olive); background: var(--paper); }
+    .workflow article:nth-child(2n) { border-top-color: var(--sand); }
+    .workflow article:nth-child(7) { border-top-color: var(--rust); }
+    .workflow article::before { content: "0" counter(step); display: block; margin-bottom: 23px; color: var(--olive); font: italic 15px var(--display); }
+    .workflow article h3 { margin: 0; font: 700 11px/1.5 var(--serif); }
+    .workflow article p { margin: 5px 0 0; color: var(--ink-faint); font-size: 9px; line-height: 1.55; }
+
+    .note-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 24px; }
+    .note-box { padding: 17px 19px; background: var(--paper); border: 1px solid var(--line-soft); }
+    .note-box h3 { margin: 0 0 8px; font: 700 13px var(--serif); }
+    .note-box p { margin: 0; color: var(--ink-soft); font-size: 10px; line-height: 1.8; }
+    .note-box .note-mark { color: var(--rust); font-weight: 700; }
+    .footer {
+      margin-top: var(--section-space);
+      padding: 22px 0 0;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: var(--ink-faint);
+      font-size: 9px;
+    }
+    .footer b { color: var(--ink-soft); font-weight: 600; }
+
+    .reveal { opacity: 0; transform: translateY(15px); transition: opacity .55s ease, transform .55s cubic-bezier(.16, 1, .3, 1); }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (max-width: 1120px) {
+      .sidebar { width: 194px; }
+      .workspace { margin-left: 194px; }
+      .hero { grid-template-columns: .9fr 1.1fr; gap: 28px; }
+      .layout-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .component-catalog { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .workflow { grid-template-columns: repeat(4, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .sidebar { position: sticky; top: 0; width: auto; height: auto; inset: auto; padding: 10px 16px; border-right: 0; border-bottom: 1px solid var(--line); display: block; }
+      .brand-lockup { padding: 0 0 10px; }
+      .brand-mark { width: 28px; height: 28px; }
+      .brand-lockup strong { font-size: 12px; }
+      .brand-lockup small { display: none; }
+      .rail-label, .rail-note { display: none; }
+      .side-nav { display: flex; overflow-x: auto; gap: 3px; }
+      .side-nav a { flex: 0 0 auto; padding: 7px 9px; font-size: 10px; }
+      .side-nav a span { display: none; }
+      .workspace { margin-left: 0; }
+      .topbar { min-height: 46px; }
+      .hero { min-height: 0; grid-template-columns: 1fr; padding-top: 54px; }
+      .hero-copy { max-width: 740px; }
+      .specimen-board { max-width: 680px; width: calc(100% - 16px); justify-self: center; }
+      .brand-grid, .delivery-grid { grid-template-columns: 1fr; }
+      .gradient-row { grid-template-columns: 1fr; }
+      .section-heading { grid-template-columns: 88px minmax(0, 1fr); }
+      .guardrail { grid-template-columns: 1fr; }
+      .scene-view { grid-template-columns: 1fr .7fr; }
+    }
+    @media (max-width: 600px) {
+      body { font-size: 14px; }
+      .topbar-tag { display: none; }
+      .hero { padding-top: 39px; }
+      h1 { font-size: clamp(2.5rem, 12vw, 3.7rem); }
+      h1 em { white-space: normal; }
+      .specimen-board { min-height: 330px; padding: 13px; }
+      .board-grid { grid-template-columns: 1fr .8fr; gap: 8px; }
+      .board-type { min-height: 150px; padding: 13px; }
+      .board-type strong { font-size: 23px; }
+      .swatch-line { min-height: 42px; gap: 6px; padding: 5px; }
+      .swatch-line i { width: 22px; height: 22px; }
+      .quick-read { grid-template-columns: 1fr 1fr; }
+      .quick-read article:nth-child(2) { border-right: 0; }
+      .quick-read article:nth-child(-n+2) { border-bottom: 1px solid var(--line-soft); }
+      .section-heading { grid-template-columns: 1fr; gap: 5px; margin-bottom: 24px; }
+      .section-number { padding-top: 0; }
+      .type-panel { grid-template-columns: 1fr; }
+      .type-roles { grid-template-columns: 1fr 1fr; column-gap: 15px; }
+      .token-strip { grid-template-columns: 1fr 1fr; }
+      .token:first-child { grid-column: span 2; }
+      .principle-row { grid-template-columns: 1fr; }
+      .principle-row div { padding: 12px 0; border-bottom: 1px solid var(--line-soft); }
+      .scene-switcher { overflow-x: auto; flex-wrap: nowrap; }
+      .scene-tab { flex: 0 0 auto; }
+      .scene-view.active { grid-template-columns: 1fr; }
+      .scene-template { min-height: 140px; }
+      .layout-toolbar, .catalog-toolbar { align-items: stretch; flex-direction: column; }
+      .layout-search, .catalog-search { width: 100%; }
+      .layout-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+      .layout-card { padding: 9px; }
+      .layout-thumb { height: 65px; }
+      .component-playground { grid-template-columns: 1fr; }
+      .component-exhibit { min-height: 285px; }
+      .component-gallery-head { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .component-catalog { grid-template-columns: 1fr 1fr; gap: 5px; }
+      .component-entry { min-height: 70px; padding: 9px 8px; }
+      .template-list { grid-template-columns: 1fr; }
+      .template-item:first-child { grid-column: auto; }
+      .workflow { grid-template-columns: 1fr 1fr; }
+      .workflow article { min-height: 120px; }
+      .workflow article::before { margin-bottom: 12px; }
+      .note-grid { grid-template-columns: 1fr; }
+      .footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="页面导航">
+      <a class="brand-lockup" href="#overview">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span><strong>Esther Design System</strong><small>PERSONAL DESIGN LANGUAGE</small></span>
+      </a>
+      <p class="rail-label">这套库已经规定了什么</p>
+      <nav class="side-nav">
+        <a href="#brand"><span>01</span>品牌基因</a>
+        <a href="#scenes"><span>02</span>使用场景</a>
+        <a href="#layouts"><span>03</span>布局目录</a>
+        <a href="#components"><span>04</span>组件索引</a>
+        <a href="#delivery"><span>05</span>模板与检查</a>
+        <a href="#workflow"><span>06</span>制作流程</a>
+      </nav>
+      <div class="rail-note"><strong>记住这一句</strong>用规则收住 AI 的自由度，让每次输出都更像<span><i>同一个品牌</i></span>。</div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="crumb">Library <span aria-hidden="true">/</span> <b>设计系统地图</b></div>
+        <div class="topbar-tag"><span class="live-dot" aria-hidden="true"></span>内容来自仓库文档与模板</div>
+      </header>
+
+      <main>
+        <section class="hero" id="overview">
+          <div class="hero-copy">
+            <p class="hero-kicker">ESTHER DESIGN SYSTEM · LIBRARY MAP</p>
+            <h1>把审美写成<br><em>可执行的规则</em></h1>
+            <p>一套供 AI 生成网页与图文内容时使用的个人品牌设计手册。这里把品牌基因、场景规范、布局模式、组件和质量检查放在同一张地图里。</p>
+            <div class="hero-actions">
+              <a class="primary-link" href="#scenes">浏览场景规范</a>
+              <a class="text-link" href="#components">查看组件目录</a>
+            </div>
+            <div class="hero-index" aria-label="内容规模">
+              <span><b>5</b> 个场景</span>
+              <span><b>16</b> 种布局</span>
+              <span><b>52</b> 个编号组件组</span>
+              <span><b>7</b> 步制作流程</span>
+            </div>
+          </div>
+          <div class="specimen-board reveal" aria-label="品牌样式速览">
+            <div class="board-head"><span>品牌基因 · 样张</span><b>esther / 01</b></div>
+            <div class="board-grid">
+              <div class="board-type">
+                <small>表达规则：标题衬线，正文无衬线</small>
+                <strong>有温度，<br><em>也有方法。</em></strong>
+                <span>Make it feel human.</span>
+              </div>
+              <div class="swatch-stack">
+                <div class="swatch-line"><i style="background:#FEF5DC"></i><span><b>纸感底色</b><small>#FEF5DC</small></span></div>
+                <div class="swatch-line"><i style="background:#4B5320"></i><span><b>苔绿</b><small>#4B5320</small></span></div>
+                <div class="swatch-line"><i style="background:#5FA8C2"></i><span><b>湖水蓝</b><small>#5FA8C2</small></span></div>
+                <div class="swatch-line"><i style="background:#CF5527"></i><span><b>陶土橙</b><small>#CF5527</small></span></div>
+              </div>
+            </div>
+            <div class="board-footer">
+              <div><b>clamp()</b><small>流体字号与间距</small></div>
+              <div><b>900px</b><small>两栏转单栏</small></div>
+              <div><b>暖底</b><small>留住纸张感</small></div>
+            </div>
+            <span class="scribble">品牌色样 / Nº 08</span>
+          </div>
+        </section>
+
+        <div class="quick-read" aria-label="资料概览">
+          <article><strong>05</strong><span>场景规范</span></article>
+          <article><strong>16</strong><span>布局模式</span></article>
+          <article><strong>52</strong><span>组件编号组 <small>（README 写 51）</small></span></article>
+          <article><strong>05</strong><span>HTML 起步模板</span></article>
+        </div>
+
+        <section class="section" id="brand">
+          <div class="section-heading">
+            <div class="section-number">01 / DNA</div>
+            <div><p class="eyebrow">FOUNDATION</p><h2>先规定品牌怎么说话</h2><p>颜色、字体、留白、内容语气与禁忌，构成所有场景共用的底层规则。</p></div>
+          </div>
+          <div class="brand-grid">
+            <article class="palette-panel">
+              <div class="panel-topline"><h3>自然色彩角色</h3><small>面积参考：纸色 60 · 结构 30 · 强调 10</small></div>
+              <div class="ratio-bar" aria-label="纸感中性色约六成，结构色约三成，强调色约一成"><span></span><span></span><span></span></div>
+              <div class="palette-list">
+                <div class="palette-item" style="--swatch:#FEF5DC"><i></i><span><b>Sweet Vanilla · 纸感底色</b><small>页面底、留白与浅卡片</small></span><code>#FEF5DC</code></div>
+                <div class="palette-item" style="--swatch:#4B5320"><i></i><span><b>Army Green · 主结构</b><small>标题、导航与主要状态</small></span><code>#4B5320</code></div>
+                <div class="palette-item" style="--swatch:#5FA8C2"><i></i><span><b>Nordic Lake · 辅助冷色</b><small>图形与局部面板</small></span><code>#5FA8C2</code></div>
+                <div class="palette-item" style="--swatch:#572013"><i></i><span><b>Coffee · 正文墨色</b><small>正文与深色文字</small></span><code>#572013</code></div>
+                <div class="palette-item" style="--swatch:#CF5527"><i></i><span><b>Clay Orange · 暖强调</b><small>重点、标签与少量 CTA</small></span><code>#CF5527</code></div>
+                <div class="palette-item" style="--swatch:#7D2027"><i></i><span><b>Wine Red · 深强调</b><small>重要节点与深色强调</small></span><code>#7D2027</code></div>
+              </div>
+              <div class="palette-extensions" aria-label="辅助色板">
+                <div class="palette-extension" style="--swatch:#FAE3B1"><i></i><b>Oat</b><code>#FAE3B1</code></div>
+                <div class="palette-extension" style="--swatch:#FEEDA7"><i></i><b>Pale Gold</b><code>#FEEDA7</code></div>
+                <div class="palette-extension" style="--swatch:#998731"><i></i><b>Olive Gold</b><code>#998731</code></div>
+                <div class="palette-extension" style="--swatch:#673C34"><i></i><b>Terracotta</b><code>#673C34</code></div>
+                <div class="palette-extension" style="--swatch:#63493E"><i></i><b>Chestnut</b><code>#63493E</code></div>
+                <div class="palette-extension" style="--swatch:#911A1D"><i></i><b>Brick</b><code>#911A1D</code></div>
+                <div class="palette-extension" style="--swatch:#EEEBE6"><i></i><b>Limestone</b><code>#EEEBE6</code></div>
+                <div class="palette-extension" style="--swatch:#C5D1D8"><i></i><b>Nordic Mist</b><code>#C5D1D8</code></div>
+                <div class="palette-extension" style="--swatch:#D3E6F7"><i></i><b>Powder Blue</b><code>#D3E6F7</code></div>
+              </div>
+              <p class="palette-foot">每页围绕 60/30/10 选色：1–2 个结构色、1 个强调色。浅蓝、浅黄、橙与橄榄金适合大色块或装饰，不用作小字号正文。</p>
+            </article>
+            <article>
+              <div class="type-panel">
+                <div class="type-sample"><span class="latin">Bodoni Moda</span><strong>标题有骨架，<br>正文保持清楚。</strong><p>中文标题使用 Noto Serif SC；英文系列名用 Bodoni Moda；正文使用 Noto Sans SC。</p></div>
+                <div class="type-roles">
+                  <div class="type-role"><b>中文标题</b><small>Noto Serif SC · 中高字重</small></div>
+                  <div class="type-role"><b>中文正文与 UI</b><small>Noto Sans SC / 系统无衬线</small></div>
+                  <div class="type-role"><b>英文标题与系列名</b><small>Bodoni Moda · 斜体少量使用</small></div>
+                  <div class="type-role"><b>数字与代码</b><small>Bodoni Moda / Fira Code</small></div>
+                </div>
+              </div>
+              <div class="token-strip">
+                <div class="token"><b>Hero 标题</b><code>clamp(2.8rem, 7vw, 5.5rem)</code><small>大标题随视口流动</small></div>
+                <div class="token"><b>Section</b><code>clamp(80px, 12vh, 160px)</code><small>章节留白</small></div>
+                <div class="token"><b>内容宽度</b><code>max-width: 1300px</code><small>中央收束</small></div>
+              </div>
+            </article>
+          </div>
+          <div class="principle-row">
+            <div><b>视觉气质</b>时装画册式编辑感；成熟利落，以大色块、裁切构图和自然材质建立张力。</div>
+            <div><b>排版原则</b>标题是视觉主角；不对称构图、克制留白、正文保持清晰易读。</div>
+            <div><b>响应规则</b>900px / 600px 断点；移动端重排内容，不隐藏内容。</div>
+          </div>
+          <div class="gradient-row" aria-label="参考图提供的三组品牌渐变">
+            <div class="gradient-chip forest"><b>Forest Green</b><code>#323D2E → #9AA48C → #BCC7BE</code></div>
+            <div class="gradient-chip sahara"><b>Sahara</b><code>#59361E → #EDBA8D → #F7F7F7</code></div>
+            <div class="gradient-chip sea"><b>Sea</b><code>#096060 → #075057 → #D2ECF2</code></div>
+          </div>
+          <div class="guardrail">
+            <div><h3>明确禁忌</h3><p>这套规范刻意排除的视觉套路</p></div>
+            <div class="guardrail-list">
+              <span class="ban">蓝紫渐变 / neon</span><span class="ban">无关的多色渐变</span><span class="ban">glassmorphism</span><span class="ban">Inter / Roboto</span>
+              <span class="ban">所有 section 居中</span><span class="ban">bounce 动画</span><span class="ban">cards 嵌套 cards</span>
+              <span class="ban">默认 HTML 样式</span><span>Forest Green / Sahara / Sea 为指定例外</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="scenes">
+          <div class="section-heading">
+            <div class="section-number">02 / SCENES</div>
+            <div><p class="eyebrow">CHOOSE A STARTING POINT</p><h2>五种任务，各有起步模板</h2><p>先按交付内容选场景，再读取对应规范和模板。点选类别查看它的设计重点。</p></div>
+          </div>
+          <div class="scene-switcher" role="tablist" aria-label="设计场景">
+            <button class="scene-tab" role="tab" aria-selected="true" aria-controls="scene-tutorial" id="tab-tutorial">教程 / 介绍</button>
+            <button class="scene-tab" role="tab" aria-selected="false" aria-controls="scene-landing" id="tab-landing">活动 / Landing</button>
+            <button class="scene-tab" role="tab" aria-selected="false" aria-controls="scene-app" id="tab-app">App / 功能</button>
+            <button class="scene-tab" role="tab" aria-selected="false" aria-controls="scene-cards" id="tab-cards">图文卡片</button>
+            <button class="scene-tab" role="tab" aria-selected="false" aria-controls="scene-wechat" id="tab-wechat">公众号排版</button>
+          </div>
+          <div class="scene-view active" role="tabpanel" id="scene-tutorial" aria-labelledby="tab-tutorial">
+            <div class="scene-copy"><p class="eyebrow">LEARN · EXPLAIN · GUIDE</p><h3>教程型 / 介绍型 / 科普型</h3><p>用清楚的信息层级和不同 section 布局讲完整一件事。允许克制的滚动揭示、大字号和视觉惊喜，但不能牺牲阅读节奏。</p><ul><li>至少 3 种布局</li><li>clamp 流体字号</li><li>Scroll Reveal</li></ul></div>
+            <div class="scene-template"><small>起步文件</small><strong>把复杂知识<br>讲得有节奏</strong><code>template-tutorial.html</code></div>
+          </div>
+          <div class="scene-view" role="tabpanel" id="scene-landing" aria-labelledby="tab-landing">
+            <div class="scene-copy"><p class="eyebrow">INVITE · PRESENT · CONVERT</p><h3>活动页 / 分享会 / Landing</h3><p>让页面有开场、有节奏，也有明确的下一步。常用强视觉 Hero、深浅面板交替、CTA、头像集群和流程条。</p><ul><li>CTA 清楚</li><li>节奏变化</li><li>头像与引言组件</li></ul></div>
+            <div class="scene-template"><small>起步文件</small><strong>一眼看懂活动，<br>知道怎么加入</strong><code>template-landing.html</code></div>
+          </div>
+          <div class="scene-view" role="tabpanel" id="scene-app" aria-labelledby="tab-app">
+            <div class="scene-copy"><p class="eyebrow">NAVIGATE · FILTER · ACT</p><h3>App 型 / 功能型</h3><p>功能优先、信息密度更高、交互反馈明确。常见骨架是固定 Header、Tab 或侧栏、内容区与卡片网格。</p><ul><li>导航常驻</li><li>Hover / Focus 状态</li><li>移动端单列</li></ul></div>
+            <div class="scene-template"><small>起步文件</small><strong>先找到功能，<br>再完成操作</strong><code>template-app.html</code></div>
+          </div>
+          <div class="scene-view" role="tabpanel" id="scene-cards" aria-labelledby="tab-cards">
+            <div class="scene-copy"><p class="eyebrow">3:4 · MOBILE FIRST</p><h3>小红书图文卡片</h3><p>画布按 1080×1440 设计，字号适合手机阅读；页与页之间更换排版手法，并提供单页 PNG 与批量导出体验。</p><ul><li>封面 / 内容页 / 尾页</li><li>建议不超过 18 张</li><li>导出 PNG / ZIP</li></ul></div>
+            <div class="scene-template"><small>起步文件</small><strong>一页一个重点，<br>翻页有节奏</strong><code>template-cards.html</code></div>
+          </div>
+          <div class="scene-view" role="tabpanel" id="scene-wechat" aria-labelledby="tab-wechat">
+            <div class="scene-copy"><p class="eyebrow">WECHAT EDITOR</p><h3>公众号杂志编号风</h3><p>适配公众号编辑器：以 section 做布局容器，样式内联，正文保留原文；有标题断行与图片 base64 交付要求。</p><ul><li>677px 内容宽度</li><li>18px 正文 / 2 倍行高</li><li>内联样式 + base64</li></ul></div>
+            <div class="scene-template"><small>起步文件</small><strong>复制进编辑器<br>也保留排版感</strong><code>template-wechat.html</code></div>
+          </div>
+        </section>
+
+        <section class="section" id="layouts">
+          <div class="section-heading">
+            <div class="section-number">03 / LAYOUTS</div>
+            <div><p class="eyebrow">16 COMPOSITION PATTERNS</p><h2>版面有可挑选的骨架</h2><p>布局库给的是信息关系与页面节奏。每页按内容组合，避免所有 section 都长成同一种网格。</p></div>
+          </div>
+          <div class="layout-toolbar"><p>16 种布局 · 搜索名称或关键词</p><input class="layout-search" id="layout-search" type="search" placeholder="例如：时间线、Hero、Canvas" aria-label="搜索布局"></div>
+          <div class="layout-grid" id="layout-grid"></div>
+        </section>
+
+        <section class="section" id="components">
+          <div class="section-heading">
+            <div class="section-number">04 / COMPONENTS</div>
+            <div><p class="eyebrow">REUSABLE PARTS</p><h2>组件有代码，也有呈现方式</h2><p>从组件地图打开完整预览，或直接点击下方任一组件名称，跳转到它在预览页中的具体位置。</p></div>
+          </div>
+          <div class="component-gallery-head">
+            <div><h3>52 组组件视觉预览</h3><p>查看组件外观、分类和交互示例；地图中的组件名称可直达对应条目。</p></div>
+            <a href="esther-design-system-earthy-palette/esther-design-system-main/components-preview.html" target="_blank" rel="noopener">打开组件预览 ↗</a>
+          </div>
+          <div class="catalog-toolbar"><p><b id="component-count">52</b> 个编号组件组 · 点击名称跳转预览，或输入关键词筛选</p><input class="catalog-search" id="component-search" type="search" placeholder="搜索：卡片、引用、Tab、动效…" aria-label="搜索组件"></div>
+          <div class="component-catalog" id="component-catalog"></div>
+          <div class="catalog-empty" id="catalog-empty">没有匹配项，试试另一个关键词。</div>
+        </section>
+
+        <section class="section" id="delivery">
+          <div class="section-heading">
+            <div class="section-number">05 / QA</div>
+            <div><p class="eyebrow">TEMPLATES & QUALITY GATES</p><h2>交付从模板开始，用清单收尾</h2><p>每个场景有对应起点。完成后按 P0、P1、P2 逐层自检，P0 项必须通过。</p></div>
+          </div>
+          <div class="delivery-grid">
+            <div class="template-list">
+              <article class="template-item"><b>教程 / 介绍页</b><small>适合知识讲解、步骤说明和科普内容</small><code>assets/template-tutorial.html</code></article>
+              <article class="template-item"><b>活动 / Landing</b><small>邀请、介绍、转化</small><code>assets/template-landing.html</code></article>
+              <article class="template-item"><b>App / 功能页</b><small>看板、书架、Canvas</small><code>assets/template-app.html</code></article>
+              <article class="template-item"><b>图文卡片</b><small>3:4 画布与导出</small><code>assets/template-cards.html</code></article>
+              <article class="template-item"><b>公众号</b><small>内联样式、复制粘贴</small><code>assets/template-wechat.html</code></article>
+            </div>
+            <article class="checklist-panel">
+              <h3>三级检查清单</h3>
+              <div class="priority"><strong>P0</strong><p>中性色/结构色/强调色约 60/30/10、暖纸底、标题衬线与正文无衬线、响应式、每节布局有变化、clamp 流体尺寸、无默认 HTML 样式。</p></div>
+              <div class="priority"><strong>P1</strong><p>至少一个视觉惊喜、字号对比明显、Scroll Reveal 与 stagger、大装饰数字或英文、selection 高亮。</p></div>
+              <div class="priority"><strong>P2</strong><p>图片出血、深色面板、装饰克制，并尊重 prefers-reduced-motion。</p></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="workflow">
+          <div class="section-heading">
+            <div class="section-number">06 / PROCESS</div>
+            <div><p class="eyebrow">SEVEN STEPS</p><h2>一次页面任务的制作顺序</h2><p>从了解需求到浏览器可打开的交付物，每一步都对应库里的材料。</p></div>
+          </div>
+          <div class="workflow">
+            <article><h3>澄清需求</h3><p>类型、受众、屏数、素材、硬约束</p></article>
+            <article><h3>读取规范</h3><p>Brand DNA + 对应场景文件</p></article>
+            <article><h3>选用模板</h3><p>从 assets 起步再改内容</p></article>
+            <article><h3>组合布局</h3><p>每页挑选不同结构</p></article>
+            <article><h3>填入组件</h3><p>用库里的片段，不用默认样式</p></article>
+            <article><h3>对照清单</h3><p>P0 全通过后再交付</p></article>
+            <article><h3>交付 HTML</h3><p>浏览器直接打开查看</p></article>
+          </div>
+          <div class="note-grid">
+            <article class="note-box"><h3>为谁设计</h3><p>这是 Esther 不二的个人品牌设计语言。README 建议使用者替换姓名、头像、IP 与品牌信息；开放的方法论不等于获得原作者身份或形象授权。</p></article>
+            <article class="note-box"><h3>文档口径说明</h3><p><span class="note-mark">组件数量：</span>README 宣称 51 个，组件文档按一级编号清点为 52 组。<br><span class="note-mark">引用样式：</span>当前版已统一为避免把 border-left 竖条当作通用引用组件，需使用组件库中定义的样式。</p></article>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <span><b>ESTHER不二 · esther-design-system</b>　内容摘编自随附仓库，用于个人浏览与理解。</span>
+          <span>仓库说明：CC BY-NC-SA 4.0 · 请保留来源并遵循原协议</span>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const layouts = [
+      ['Hero 双栏不对称（文字 + 视觉）', '左文右图，内容与视觉互补。', 'split'],
+      ['Sticky 侧栏 + 内容滚动', '固定索引，右侧长内容阅读。', 'sticky'],
+      ['三等分卡片网格', '均衡并列，适合短内容。', 'cards'],
+      ['纵向 Step 流程线', '顺序明确的分步讲解。', 'steps'],
+      ['中轴时间线交错', '沿中线交替呈现节点。', 'timeline'],
+      ['全宽深色面板', '以深色区块打断页面节奏。', 'dark'],
+      ['横向 Step 连接线', '横向铺开步骤与关系。', 'horizontal'],
+      ['Hero 全屏居中型', '单一焦点，集中开场。', 'center'],
+      ['Hero 单栏纵向（中心辐射型）', '中心信息向外延展。', 'radial'],
+      ['自适应卡片网格（auto-fill）', '卡片随空间自动换列。', 'cards'],
+      ['全宽品牌色面板', '大面积品牌色承担章节强调。', 'brand'],
+      ['横向滚动时间线', '横向滑动浏览经历节点。', 'horizontal'],
+      ['分栏对称（Pain Point 展示）', '左右平衡比较问题和变化。', 'symmetric'],
+      ['Tab 切换单栏（Dashboard 型）', '同一空间切换分类内容。', 'tabs'],
+      ['无限画布（Canvas 型）', '自由摆放节点与关系。', 'canvas'],
+      ['Sticky 编号侧栏 + 大图杂志卡片', '固定编号，配合杂志式图文。', 'editorial']
+    ];
+    const components = [
+      '卡片组件库（5 种变体）','Section Header（数字 + 标题组合）','引用块 / Key Insight','Scroll Reveal 容器',
+      '代码面板（4 种变体）','Pull Quote（大字引用 + 装饰引号）','对话气泡组（Chat Bubbles）','Tip Header（超大装饰数字 + 标题）',
+      '导航栏（Fixed + Backdrop Blur）','三列 Chair 卡片（5 种变体）','系统流程条（Flow Arrow）','Do / Don’t 对比列表（4 种变体）',
+      '头像集群（Avatar Cluster + Orbit 标签）','Filter 标签栏','书卡（Book Card）','Modal 滚动阅读',
+      '日历网格（Emoji 情绪记录）','CTA 按钮','对比表 A：杂志 Editorial 对比','对比表 B：圆点标识表',
+      '机票 / 航班卡片（3 种变体）','住宿 / 酒店卡片（3 种变体）','报纸多栏排版','全屏大片压字',
+      '打字机 / 终端风','横向滑动卡片（Horizontal Scroll Cards）','Tab 切换面板（Tab Switcher）','手风琴展开（Accordion）',
+      '箭头轮播（Arrow Carousel）','堆叠卡片（Stacked Cards）','翻转卡片（3D Flip Card）','悬停揭示卡片（Hover Reveal Card）',
+      '暗底大字 + 按钮揭示（Dark Hero Reveal）','编号卡片网格（Numbered Card Grid）','交互清单（Interactive Checklist）','缩略图轨道 + 侧面板（Thumbnail Rail + Side Panel）',
+      '悬停翻转卡片（Hover Flip Cards）','巨大引号居中（Giant Quote Centered）','肖像分割 + 引号（Portrait Split Quote）','极简留白引号（Ultra-Minimal Quote）',
+      '横向时间线卡片 — 彩色大标题变体（4 种）','圆形步骤卡片（环形循环）','用户签名档 / Tagline','Sparkles Text（星光文字）',
+      'Morphing Text（文字变形）','Cool Mode（点击粒子爆发）','Typing Animation（打字机动画）','Kinetic Text（动态字重文字）',
+      'Pixel Image（像素渐显图片）','Text Highlighter（手绘标注）','Comic Text（漫画文字）','Spinning Text（环形旋转文字）'
+    ];
+
+    const layoutGrid = document.getElementById('layout-grid');
+    layouts.forEach(function (item, index) {
+      const card = document.createElement('article');
+      card.className = 'layout-card';
+      card.dataset.search = item[0].toLowerCase() + ' ' + item[1].toLowerCase();
+      card.innerHTML = '<span class="layout-num">' + String(index + 1).padStart(2, '0') + '</span>' +
+        '<div class="layout-thumb" data-kind="' + item[2] + '" aria-hidden="true"><i></i><i></i><b></b></div>' +
+        '<h3 class="layout-name">' + item[0] + '</h3><p class="layout-note">' + item[1] + '</p>';
+      layoutGrid.appendChild(card);
+    });
+
+    const catalog = document.getElementById('component-catalog');
+    components.forEach(function (name, index) {
+      const item = document.createElement('a');
+      item.className = 'component-entry';
+      item.href = 'esther-design-system-earthy-palette/esther-design-system-main/components-preview.html#component-' + (index + 1);
+      item.target = '_blank';
+      item.rel = 'noopener';
+      item.dataset.search = name.toLowerCase();
+      item.innerHTML = '<span>' + String(index + 1).padStart(2, '0') + '</span><b>' + name + '</b>';
+      catalog.appendChild(item);
+    });
+    document.getElementById('component-count').textContent = components.length;
+
+    document.querySelectorAll('.scene-tab').forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.scene-tab').forEach(function (other) { other.setAttribute('aria-selected', 'false'); });
+        document.querySelectorAll('.scene-view').forEach(function (view) { view.classList.remove('active'); });
+        tab.setAttribute('aria-selected', 'true');
+        document.getElementById(tab.getAttribute('aria-controls')).classList.add('active');
+      });
+    });
+
+    document.getElementById('layout-search').addEventListener('input', function (event) {
+      const query = event.target.value.trim().toLowerCase();
+      document.querySelectorAll('.layout-card').forEach(function (card) {
+        card.hidden = query && !card.dataset.search.includes(query);
+      });
+    });
+    document.getElementById('component-search').addEventListener('input', function (event) {
+      const query = event.target.value.trim().toLowerCase();
+      let visible = 0;
+      document.querySelectorAll('.component-entry').forEach(function (entry) {
+        const matches = !query || entry.dataset.search.includes(query);
+        entry.hidden = !matches;
+        if (matches) visible++;
+      });
+      document.getElementById('catalog-empty').classList.toggle('show', visible === 0);
+    });
+
+    if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(function (element) { observer.observe(element); });
+    } else {
+      document.querySelectorAll('.reveal').forEach(function (element) { element.classList.add('visible'); });
+    }
+  </script>
+</body>
+</html>

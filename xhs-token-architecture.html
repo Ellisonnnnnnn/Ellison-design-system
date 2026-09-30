@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>设计系统里的 3 层 Token｜小红书知识卡片</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700;900&family=Noto+Sans+SC:wght@400;500;700;900&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400;1,6..96,500;1,6..96,600;1,6..96,700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="esther-design-system-earthy-palette/esther-design-system-main/assets/html2canvas.min.js" onerror="console.error('html2canvas failed to load')"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+::selection { background: var(--sand); color: var(--ink); }
+
+:root { --_esther-ds: "esthersjw-v1";
+  --sand: #FEEDA7;
+  --sand-soft: #FAE3B1;
+  --olive: #4B5320;
+  --olive-deep: #323D2E;
+  --rust: #CF5527;
+      --lake: #5FA8C2;
+      --wine: #7D2027;
+      --wine-deep: #911A1D;
+      --coffee: #572013;
+      --earth: #673C34;
+      --antique: #998731;
+      --stone: #EEEBE6;
+      --mist: #C5D1D8;
+      --powder-blue: #D3E6F7;
+      --sand-warm: #FAE3B1;
+  --cream: #FEF5DC;
+      --paper: #FEF5DC;
+      --chestnut: #63493E;
+      --brick: #911A1D;
+  --cream-dark: #FAE3B1;
+  --ink: #572013;
+  --ink-light: #63493E;
+  --ink-faint: #673C34;
+}
+
+body {
+  background: var(--stone);
+  font-family: 'Noto Sans SC', sans-serif;
+  color: var(--ink);
+  padding: 40px 20px;
+}
+
+/* ========== 导出栏 ========== */
+.export-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--ink);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.export-bar button {
+  background: var(--olive);
+  color: #FEF5DC;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.export-bar button:hover { background: var(--olive-deep); }
+
+.export-bar .hint {
+  color: #aaa;
+  font-size: 13px;
+}
+
+/* ========== 卡片容器 ========== */
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  margin-top: 80px;
+}
+
+.card {
+  width: 1080px;
+  height: 1440px;
+  position: relative;
+  overflow: hidden;
+  transform: scale(0.45);
+  transform-origin: top center;
+  margin-bottom: -792px;
+  border-radius: 4px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+}
+
+/* ========== P1 封面 ========== */
+.p-cover {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 90px;
+}
+
+.p-cover .deco-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 8px;
+  background: var(--olive);
+}
+
+.p-cover .tag {
+  font-size: 28px;
+  font-weight: 700;
+  color: #FEF5DC;
+  background: var(--olive);
+  display: inline-block;
+  padding: 8px 24px;
+  border-radius: 6px;
+  margin-bottom: 40px;
+  letter-spacing: 2px;
+}
+
+.p-cover h1 {
+  font-family: 'Bodoni Moda', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 88px;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 24px;
+}
+
+.p-cover h1 .highlight { color: var(--olive); }
+
+.p-cover .subtitle {
+  font-size: 42px;
+  color: var(--ink-light);
+  font-weight: 500;
+  line-height: 1.6;
+  margin-bottom: 80px;
+}
+
+.p-cover .author-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: auto;
+}
+
+.p-cover .avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--sand);
+}
+
+.p-cover .author-name {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.p-cover .author-desc {
+  font-size: 24px;
+  color: var(--ink-light);
+  margin-top: 4px;
+}
+
+/* ========== 深色面板页 ========== */
+.p-dark {
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  padding: 80px 80px;
+}
+
+.p-dark .page-num {
+  font-family: 'Bodoni Moda', serif;
+  font-style: italic;
+  font-size: 120px;
+  color: var(--sand);
+  opacity: 0.15;
+  position: absolute;
+  top: 40px;
+  right: 80px;
+  font-weight: 700;
+}
+
+.p-dark h2 {
+  font-family: 'Bodoni Moda', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 52px;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+
+.p-dark .sub {
+  font-size: 32px;
+  color: var(--sand);
+  margin-bottom: 60px;
+  font-weight: 500;
+}
+
+.p-dark .items {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 36px;
+}
+
+.p-dark .item {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.p-dark .item .icon {
+  font-size: 40px;
+  flex-shrink: 0;
+  width: 56px;
+  text-align: center;
+}
+
+.p-dark .item .text {
+  font-size: 38px;
+  color: var(--stone);
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.p-dark .item .text strong {
+  color: #FEF5DC;
+  font-weight: 700;
+}
+
+.p-dark .deco-line {
+  position: absolute;
+  bottom: 80px;
+  left: 80px;
+  right: 80px;
+  height: 4px;
+  background: var(--sand);
+  border-radius: 2px;
+  opacity: 0.6;
+}
+
+/* ========== 浅色列表页 ========== */
+.p-list {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  padding: 72px 80px;
+}
+
+.p-list .page-num {
+  font-family: 'Bodoni Moda', serif;
+  font-style: italic;
+  font-size: 120px;
+  color: var(--olive);
+  opacity: 0.12;
+  position: absolute;
+  top: 40px;
+  right: 80px;
+  font-weight: 700;
+}
+
+.p-list h2 {
+  font-family: 'Bodoni Moda', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 52px;
+  margin-bottom: 48px;
+  color: var(--ink);
+}
+
+.p-list h2::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 6px;
+  background: var(--sand);
+  margin-top: 16px;
+  border-radius: 3px;
+}
+
+.p-list .content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+}
+
+/* ========== 尾页 ========== */
+.p-end {
+  background: var(--cream);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 90px;
+  text-align: center;
+}
+
+.p-end .deco-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 8px;
+  background: var(--olive);
+}
+
+.p-end .quote-mark {
+  font-family: 'Bodoni Moda', serif;
+  font-style: italic;
+  font-size: 200px;
+  color: var(--olive);
+  opacity: 0.15;
+  line-height: 0.6;
+  margin-bottom: -20px;
+}
+
+.p-end .quote {
+  font-family: 'Bodoni Moda', 'Noto Serif SC', serif;
+  font-weight: 900;
+  font-size: 60px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin-bottom: 32px;
+  max-width: 900px;
+}
+
+.p-end .quote .highlight {
+  color: var(--olive);
+  text-decoration: underline;
+  text-decoration-color: var(--sand);
+  text-underline-offset: 8px;
+  text-decoration-thickness: 4px;
+}
+
+.p-end .avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--sand);
+  margin-bottom: 20px;
+}
+
+.p-end .author-name {
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.p-end .cta {
+  font-size: 32px;
+  color: var(--olive);
+  font-weight: 600;
+  margin-bottom: 48px;
+}
+
+.p-end .tagline {
+  font-size: 26px;
+  color: var(--ink-light);
+  letter-spacing: 2px;
+}
+
+/* Token architecture cards */
+.page-kicker { margin-bottom: 18px; color: var(--olive); font: 600 22px/1.4 'Bodoni Moda','Noto Sans SC',serif; letter-spacing: 2px; }
+.p-dark .page-kicker { color: var(--sand); }
+.folio { position: absolute; right: 78px; bottom: 42px; color: var(--ink-light); font: 600 20px 'Bodoni Moda',serif; letter-spacing: 2px; }
+.p-dark .folio { color: rgba(254,245,220,.62); }
+.cover-chain { display: flex; align-items: center; gap: 20px; margin: -28px 0 58px; color: var(--olive); font: 700 22px 'Bodoni Moda',serif; letter-spacing: 3px; }
+.cover-chain span { padding: 12px 18px; border: 1px solid rgba(75,83,32,.28); }
+.cover-chain i { color: var(--rust); font-style: normal; font-size: 30px; }
+.cover-note { position: absolute; right: 90px; bottom: 92px; color: var(--ink-light); font: italic 18px 'Bodoni Moda',serif; letter-spacing: 2px; text-align: right; }
+.lede { max-width: 850px; margin: 0 0 44px; color: var(--ink-light); font-size: 34px; line-height: 1.7; }
+.before-after { display: grid; grid-template-columns: 1fr 70px 1fr; gap: 16px; align-items: center; }
+.specimen { min-height: 250px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between; }
+.specimen.raw { background: var(--stone); }
+.specimen.named { background: var(--olive); color: var(--cream); }
+.specimen-label { font: 600 20px 'Bodoni Moda',serif; letter-spacing: 3px; opacity: .75; }
+.specimen strong { font: 700 42px/1.25 'Fira Code',monospace; overflow-wrap: anywhere; }
+.specimen small { font-size: 25px; }
+.transition-arrow { color: var(--rust); font: 48px 'Bodoni Moda',serif; text-align: center; }
+.equation { margin-top: 36px; padding: 24px 28px; background: var(--sand); color: var(--ink); font: 700 28px/1.5 'Noto Serif SC',serif; }
+.code-window { overflow: hidden; background: #30251f; color: var(--cream); }
+.window-head { display: flex; align-items: center; gap: 10px; padding: 17px 22px; border-bottom: 1px solid rgba(254,245,220,.14); color: var(--sand); font: 500 18px 'Fira Code',monospace; letter-spacing: 1px; }
+.window-dots { display: flex; gap: 7px; margin-right: 8px; }
+.window-dots i { width: 10px; height: 10px; border-radius: 50%; background: var(--rust); }
+.window-dots i:nth-child(2) { background: var(--sand); }
+.window-dots i:nth-child(3) { background: #5FA8C2; }
+.code-window pre { padding: 26px 30px; white-space: pre-wrap; overflow-wrap: anywhere; font: 500 25px/1.65 'Fira Code',monospace; }
+.code-window .muted-code { color: #d2bba7; }
+.primitive-items { justify-content: flex-start !important; gap: 28px !important; }
+.primitive-questions { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+.question-cell { min-height: 142px; padding: 20px; display: flex; align-items: flex-end; background: rgba(254,245,220,.1); color: var(--cream); font: 600 24px/1.55 'Noto Serif SC',serif; }
+.semantic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.semantic-card { min-height: 150px; padding: 22px 24px; background: var(--stone); display: flex; flex-direction: column; justify-content: space-between; }
+.semantic-card b { color: var(--ink); font: 700 27px 'Noto Serif SC',serif; }
+.semantic-card code { color: var(--olive); font: 500 19px/1.5 'Fira Code',monospace; overflow-wrap: anywhere; }
+.semantic-card small { color: var(--ink-light); font: 500 18px 'Fira Code',monospace; }
+.semantic-card .role-row { display: flex; align-items: center; gap: 12px; }
+.semantic-card .swatch { width: 18px; height: 18px; border-radius: 50%; background: var(--olive); flex: 0 0 auto; }
+.semantic-card:nth-child(2) .swatch { background: #111827; }
+.semantic-card:nth-child(3) .swatch { background: #4b5563; }
+.semantic-card:nth-child(4) .swatch { background: #fff; border: 1px solid #c5d1d8; }
+.semantic-card:nth-child(5) .swatch { background: #f9fafb; border: 1px solid #c5d1d8; }
+.semantic-card:nth-child(6) .swatch { background: #e5e7eb; }
+.semantic-note { margin-top: 24px; padding: 22px 26px; background: var(--sand); color: var(--ink); font-size: 27px; line-height: 1.55; }
+.semantic-note code { padding: 3px 7px; background: rgba(75,83,32,.08); color: var(--olive); font: 500 .86em 'Fira Code',monospace; }
+.theme-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.theme-panel { min-height: 355px; padding: 24px; background: #fff; color: #111827; }
+.theme-panel.dark { background: #111827; color: #fff; }
+.theme-label { display: flex; justify-content: space-between; font: 600 18px 'Bodoni Moda',serif; letter-spacing: 2px; }
+.mini-page { margin-top: 28px; padding: 23px; background: #f3f4f6; }
+.theme-panel.dark .mini-page { background: #202b3d; }
+.mini-page b { display: block; margin-bottom: 18px; font: 700 25px 'Noto Serif SC',serif; }
+.mini-action { display: inline-block; padding: 13px 20px; background: #2563eb; color: #fff; font-size: 20px; font-weight: 700; }
+.theme-panel.dark .mini-action { background: #3b82f6; }
+.theme-code { margin-top: 22px; }
+.theme-code pre { font-size: 21px; }
+.component-showcase { display: grid; grid-template-columns: .8fr 1.2fr; gap: 18px; align-items: stretch; }
+.p-dark .component-showcase { display: grid; flex-direction: initial; grid-template-columns: .8fr 1.2fr; gap: 18px; align-items: stretch; }
+.component-sample { padding: 28px; background: rgba(254,245,220,.1); display: flex; flex-direction: column; justify-content: center; gap: 25px; }
+.component-sample.light-sample { background: var(--stone); }
+.component-sample.light-sample .sample-label { color: var(--olive); }
+.component-sample .sample-label { color: var(--sand); font: 600 18px 'Bodoni Moda',serif; letter-spacing: 2px; }
+.sample-button { border: 0; min-height: 58px; padding: 0 24px; background: #2563eb; color: #fff; font: 700 22px 'Noto Sans SC',sans-serif; border-radius: 8px; }
+.sample-input { width: 100%; height: 54px; padding: 0 16px; border: 2px solid #c5d1d8; background: var(--cream); color: var(--ink); font: 20px 'Noto Sans SC',sans-serif; }
+.sample-input:focus { outline: 3px solid #5fa8c2; border-color: #2563eb; }
+.component-code { display: grid; gap: 14px; }
+.component-code .code-window pre { font-size: 20px; }
+.flow-stack { display: grid; gap: 11px; }
+.flow-step { min-height: 138px; display: grid; grid-template-columns: 120px 1fr 230px; align-items: center; gap: 22px; padding: 22px 28px; background: var(--stone); }
+.flow-step:nth-child(2) { background: var(--mist); }
+.flow-step:nth-child(3) { background: var(--sand); }
+.flow-step:nth-child(4) { background: var(--olive); color: var(--cream); }
+.flow-index { color: var(--rust); font: italic 54px 'Bodoni Moda',serif; }
+.flow-name { font: 700 30px 'Noto Serif SC',serif; }
+.flow-example { font: 500 20px/1.5 'Fira Code',monospace; overflow-wrap: anywhere; }
+.flow-step:nth-child(4) .flow-index { color: var(--sand); }
+.flow-step:nth-child(4) .flow-example { color: var(--cream); }
+.flow-question { color: var(--ink-light); font-size: 21px; }
+.flow-step:nth-child(4) .flow-question { color: var(--sand); }
+.spacing-flow { margin-top: 22px; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 20px 24px; border: 1px solid rgba(87,32,19,.2); }
+.spacing-flow b { color: var(--olive); font: 600 21px 'Fira Code',monospace; }
+.spacing-flow i { color: var(--rust); font-style: normal; font-size: 28px; }
+.bad-good { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.bad-panel,.good-panel { padding: 28px; min-height: 245px; }
+.bad-panel { background: rgba(145,26,29,.2); border: 1px solid rgba(254,245,220,.16); }
+.good-panel { background: rgba(75,83,32,.48); border: 1px solid rgba(254,245,220,.16); }
+.panel-stamp { margin-bottom: 20px; font: 600 18px 'Bodoni Moda',serif; letter-spacing: 2px; }
+.bad-panel .panel-stamp { color: #f4aaa2; }
+.good-panel .panel-stamp { color: var(--sand); }
+.code-line { padding: 18px; background: rgba(0,0,0,.22); color: var(--cream); font: 500 23px 'Fira Code',monospace; overflow-wrap: anywhere; }
+.usage-pills { margin-top: 25px; display: flex; flex-wrap: wrap; gap: 10px; }
+.usage-pills span { padding: 8px 14px; background: rgba(254,245,220,.12); color: var(--cream); font-size: 20px; }
+.impact-note { margin-top: 25px; color: var(--cream); font-size: 25px; line-height: 1.6; }
+.business-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.business-card { min-height: 460px; padding: 30px; background: var(--stone); }
+.business-card.qa { background: var(--sand-soft); }
+.business-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.business-title h3 { color: var(--ink); font: 700 34px 'Noto Serif SC',serif; }
+.business-title span { color: var(--ink-light); font: 600 18px 'Bodoni Moda',serif; letter-spacing: 2px; }
+.business-token { margin: 22px 0; color: var(--ink-light); font: 500 18px 'Fira Code',monospace; }
+.business-token b { display: block; margin-top: 8px; color: var(--ink); font-size: 22px; }
+.brand-swatch { display: inline-block; width: 16px; height: 16px; margin-right: 10px; border-radius: 50%; background: #2563eb; vertical-align: -2px; }
+.business-card.qa .brand-swatch { background: #7c3aed; }
+.business-button { display: inline-block; margin-top: 20px; padding: 15px 24px; color: white; font-size: 22px; font-weight: 700; background: #2563eb; }
+.business-card.qa .business-button { background: #7c3aed; }
+.shared-code { margin-top: 19px; color: var(--ink-light); font: 500 18px/1.5 'Fira Code',monospace; }
+.summary-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 13px; }
+.summary-card { min-height: 290px; padding: 25px; background: var(--stone); display: flex; flex-direction: column; justify-content: space-between; }
+.summary-card:nth-child(2) { background: var(--mist); }
+.summary-card:nth-child(3) { background: var(--olive); color: var(--cream); }
+.summary-card span { color: var(--rust); font: italic 46px 'Bodoni Moda',serif; }
+.summary-card:nth-child(3) span { color: var(--sand); }
+.summary-card h3 { font: 700 29px 'Noto Serif SC',serif; }
+.summary-card code { font: 500 18px/1.5 'Fira Code',monospace; overflow-wrap: anywhere; }
+.payoff-title { margin: 32px 0 16px; color: var(--ink); font: 700 26px 'Noto Serif SC',serif; }
+.payoff-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+.payoff-grid span { padding: 14px 16px; background: var(--sand); color: var(--ink); font-size: 22px; }
+.closing-stamp { margin-top: 36px; color: var(--olive); font: italic 20px 'Bodoni Moda',serif; letter-spacing: 3px; }
+.p-end .tagline { line-height: 1.9; }
+
+@media (max-width: 900px) {
+  body { padding-left: 12px; padding-right: 12px; }
+  .export-bar { padding-left: 12px; padding-right: 12px; gap: 10px; }
+  .export-bar .hint { font-size: 12px; }
+}
+@media (max-width: 700px) {
+  .before-after { grid-template-columns: 1fr; }
+  .transition-arrow { transform: rotate(90deg); }
+  .primitive-questions,.semantic-grid,.theme-duo,.component-showcase,.bad-good,.business-grid,.summary-grid,.payoff-grid { grid-template-columns: 1fr; }
+  .flow-step { grid-template-columns: 75px 1fr; gap: 12px; }
+  .flow-example { grid-column: 2; }
+  .spacing-flow { flex-wrap: wrap; justify-content: center; }
+  .business-card { min-height: 360px; }
+}
+</style>
+</head>
+<body>
+
+<div class="export-bar">
+  <button onclick="exportAll()">📥 一键导出PNG</button>
+  <span class="hint">12 张卡片 · 1080×1440 PNG · ZIP 打包</span>
+</div>
+
+<div class="cards-container">
+
+<!-- P1 / Cover -->
+<div class="card p-cover" data-card="1">
+  <div class="deco-top"></div>
+  <span class="tag">DESIGN SYSTEM · TOKEN ARCHITECTURE</span>
+  <h1>设计系统里的<br><span class="highlight">3 层 Token</span></h1>
+  <p class="subtitle">组件不写死色值，<br>设计决定才能被复用。</p>
+  <div class="cover-chain"><span>VALUE</span><i>→</i><span>ROLE</span><i>→</i><span>PART</span></div>
+  <div class="author-row">
+    <img class="avatar" src="esther-design-system-earthy-palette/esther-design-system-main/assets/avatar.png" alt="不二头像">
+    <div>
+      <div class="author-name">Esther不二</div>
+      <div class="author-desc">一组图讲清 Token 怎么分层</div>
+    </div>
+  </div>
+  <div class="cover-note">FIELD GUIDE<br>01 — 12</div>
+</div>
+
+<!-- P2 / Token is a named design decision -->
+<div class="card p-list card-concept" data-card="2">
+  <span class="page-num">02</span>
+  <div class="page-kicker">01 / WHY TOKENS</div>
+  <h2>Token，是给设计决定起名字</h2>
+  <div class="content-area">
+    <p class="lede">#2563EB 本身只是一个蓝色值。给它命名后，系统就能理解：它代表什么、在哪里复用。</p>
+    <div class="before-after">
+      <div class="specimen raw"><span class="specimen-label">RAW VALUE</span><strong>#2563EB</strong><small>具体数值</small></div>
+      <div class="transition-arrow">→</div>
+      <div class="specimen named"><span class="specimen-label">NAMED TOKEN</span><strong>--color-brand-primary</strong><small>品牌主色 · 可复用</small></div>
+    </div>
+    <div class="equation">Token = 名称 + 被命名的设计决定</div>
+  </div>
+  <div class="folio">02 / 12</div>
+</div>
+
+<!-- P3 / Primitive -->
+<div class="card p-dark card-primitive" data-card="3">
+  <span class="page-num">03</span>
+  <div class="page-kicker">02 / PRIMITIVE</div>
+  <h2>Primitive：最基础的原材料</h2>
+  <p class="sub">它只描述数值，不替数值决定用途。</p>
+  <div class="items primitive-items">
+    <div class="code-window">
+      <div class="window-head"><span class="window-dots"><i></i><i></i><i></i></span>RAW VALUES</div>
+      <pre><code>--blue-600: #2563eb;
+--blue-500: #3b82f6;
+--gray-100: #f3f4f6;
+--gray-50: #f9fafb;
+--gray-200: #e5e7eb;
+--gray-600: #4b5563;
+--gray-900: #111827;
+--blue-700: #1d4ed8;
+--white: #ffffff;
+
+--spacing-1: 4px;
+--spacing-2: 8px;
+--radius-md: 8px;</code></pre>
+    </div>
+    <div class="primitive-questions">
+      <div class="question-cell">这个蓝色<br>具体是什么？</div>
+      <div class="question-cell">间距是多少？</div>
+      <div class="question-cell">圆角是多少？</div>
+    </div>
+    <p class="impact-note">它不回答：这个蓝是按钮色还是链接色？这个灰是页面底还是卡片底？</p>
+  </div>
+  <div class="deco-line"></div><div class="folio">03 / 12</div>
+</div>
+
+<!-- P4 / Semantic -->
+<div class="card p-list card-semantic" data-card="4">
+  <span class="page-num">04</span>
+  <div class="page-kicker">03 / SEMANTIC</div>
+  <h2>Semantic：把数值翻译成产品语言</h2>
+  <div class="content-area">
+    <p class="lede">语义 Token 描述“它代表什么”。同一种角色可以映射到不同的原始值。</p>
+    <div class="semantic-grid">
+      <div class="semantic-card"><div class="role-row"><i class="swatch"></i><b>品牌主色</b></div><code>--color-brand-primary</code><small>← --blue-600</small></div>
+      <div class="semantic-card"><div class="role-row"><i class="swatch"></i><b>主要文字</b></div><code>--color-text-primary</code><small>← --gray-900</small></div>
+      <div class="semantic-card"><div class="role-row"><i class="swatch"></i><b>次要文字</b></div><code>--color-text-secondary</code><small>← --gray-600</small></div>
+      <div class="semantic-card"><div class="role-row"><i class="swatch"></i><b>页面背景</b></div><code>--color-bg-page</code><small>← #ffffff</small></div>
+      <div class="semantic-card"><div class="role-row"><i class="swatch"></i><b>卡片背景</b></div><code>--color-bg-card</code><small>← --gray-50</small></div>
+      <div class="semantic-card"><div class="role-row"><i class="swatch"></i><b>默认边框</b></div><code>--color-border-default</code><small>← --gray-200</small></div>
+    </div>
+    <div class="semantic-note">组件只需要知道：<code>color: var(--color-brand-primary);</code><br>不用知道它底下映射的是 blue-600 还是 blue-500。</div>
+  </div>
+  <div class="folio">04 / 12</div>
+</div>
+
+<!-- P5 / Theme switching -->
+<div class="card p-list card-theme" data-card="5">
+  <span class="page-num">05</span>
+  <div class="page-kicker">04 / THEME MAPPING</div>
+  <h2>换主题，只改语义映射</h2>
+  <div class="content-area">
+    <div class="theme-duo">
+      <div class="theme-panel">
+        <div class="theme-label"><span>浅色主题</span><span>LIGHT</span></div>
+        <div class="mini-page"><b>项目概览</b><span class="mini-action">查看项目</span></div>
+      </div>
+      <div class="theme-panel dark">
+        <div class="theme-label"><span>深色主题</span><span>DARK</span></div>
+        <div class="mini-page"><b>项目概览</b><span class="mini-action">查看项目</span></div>
+      </div>
+    </div>
+    <div class="code-window theme-code">
+      <div class="window-head"><span class="window-dots"><i></i><i></i><i></i></span>THEME TOKENS</div>
+      <pre><code>:root { --color-bg-page: #ffffff; --color-text-primary: var(--gray-900); }
+--color-brand-primary-hover: var(--blue-700);
+.dark { --color-bg-page: var(--gray-900); --color-text-primary: #ffffff; }
+.page { background: var(--color-bg-page); color: var(--color-text-primary); }</code></pre>
+    </div>
+    <div class="equation">同一套组件 + 不同的语义 Token = 不同主题</div>
+  </div>
+  <div class="folio">05 / 12</div>
+</div>
+
+<!-- P6 / Button component tokens -->
+<div class="card p-dark card-button" data-card="6">
+  <span class="page-num">06</span>
+  <div class="page-kicker">05 / COMPONENT TOKENS</div>
+  <h2>Component Token：Button 的专属规格</h2>
+  <p class="sub">它把通用语义收束成某个组件的具体用法。</p>
+  <div class="items component-showcase">
+    <div class="component-sample">
+      <span class="sample-label">BUTTON / PRIMARY</span>
+      <button class="sample-button">发布内容</button>
+      <span class="sample-label">HOVER STATE</span>
+      <button class="sample-button" style="background:#1d4ed8">发布内容</button>
+    </div>
+    <div class="component-code">
+      <div class="code-window">
+        <div class="window-head"><span class="window-dots"><i></i><i></i><i></i></span>BUTTON TOKENS</div>
+        <pre><code>--button-primary-bg:
+  var(--color-brand-primary);
+--button-primary-text: var(--white);
+--button-primary-bg-hover:
+  var(--color-brand-primary-hover);
+--button-radius: var(--radius-md);
+--button-height-md: 40px;</code></pre>
+      </div>
+      <div class="code-window">
+        <div class="window-head"><span class="window-dots"><i></i><i></i><i></i></span>COMPONENT CSS</div>
+        <pre><code>.button-primary {
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
+  border-radius: var(--button-radius);
+}
+.button-primary:hover {
+  background: var(--button-primary-bg-hover);
+}</code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="deco-line"></div><div class="folio">06 / 12</div>
+</div>
+
+<!-- P7 / Input component tokens -->
+<div class="card p-list card-input" data-card="7">
+  <span class="page-num">07</span>
+  <div class="page-kicker">06 / COMPONENT TOKENS</div>
+  <h2>Input，也有自己的状态语言</h2>
+  <div class="content-area">
+    <p class="lede">输入框沿用页面语义，但边框、焦点等细节由 Input Token 管理。</p>
+    <div class="component-showcase">
+      <div class="component-sample light-sample">
+        <span class="sample-label">DEFAULT</span>
+        <input class="sample-input" value="设计 Token" readonly>
+        <span class="sample-label">FOCUS</span>
+        <input class="sample-input" value="正在编辑" readonly style="border-color:#2563eb;outline:3px solid #5fa8c2">
+      </div>
+      <div class="component-code">
+      <div class="code-window">
+        <div class="window-head"><span class="window-dots"><i></i><i></i><i></i></span>INPUT TOKENS</div>
+        <pre><code>--input-bg:
+  var(--color-bg-page);
+--input-border:
+  var(--color-border-default);
+--input-border-focus:
+  var(--color-brand-primary);
+--input-text:
+  var(--color-text-primary);</code></pre>
+      </div>
+      <div class="code-window">
+        <div class="window-head"><span class="window-dots"><i></i><i></i><i></i></span>INPUT CSS</div>
+        <pre><code>.input {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--input-text);
+}
+.input:focus {
+  border-color: var(--input-border-focus);
+}</code></pre>
+      </div>
+      </div>
+    </div>
+    <div class="semantic-note">同一产品语义，到了 Input 组件里，才变成边框、焦点和文字的具体规格。</div>
+  </div>
+  <div class="folio">07 / 12</div>
+</div>
+
+<!-- P8 / The token chain -->
+<div class="card p-list card-flow" data-card="8">
+  <span class="page-num">08</span>
+  <div class="page-kicker">07 / THE TOKEN CHAIN</div>
+  <h2>从原材料，一层层走到界面</h2>
+  <div class="content-area">
+    <div class="flow-stack">
+      <div class="flow-step"><span class="flow-index">01</span><div><div class="flow-name">Primitive</div><div class="flow-question">我是什么值？</div></div><code class="flow-example">--blue-600: #2563eb</code></div>
+      <div class="flow-step"><span class="flow-index">02</span><div><div class="flow-name">Semantic</div><div class="flow-question">我代表什么？</div></div><code class="flow-example">--color-brand-primary</code></div>
+      <div class="flow-step"><span class="flow-index">03</span><div><div class="flow-name">Component</div><div class="flow-question">在这个部件里怎么用？</div></div><code class="flow-example">--button-primary-bg</code></div>
+      <div class="flow-step"><span class="flow-index">04</span><div><div class="flow-name">Button</div><div class="flow-question">最终呈现</div></div><span class="flow-example">主按钮背景色</span></div>
+    </div>
+    <div class="spacing-flow"><b>8px</b><i>→</i><b>小间距</b><i>→</i><b>图标与文字间距</b></div>
+  </div>
+  <div class="folio">08 / 12</div>
+</div>
+
+<!-- P9 / Avoid hard-coded primitive values -->
+<div class="card p-dark card-hardcode" data-card="9">
+  <span class="page-num">09</span>
+  <div class="page-kicker">08 / AVOID THE BLAST RADIUS</div>
+  <h2>别把 Primitive 直接写进组件</h2>
+  <p class="sub">今天看起来省一步，改色时可能牵一串。</p>
+  <div class="bad-good">
+    <div class="bad-panel">
+      <div class="panel-stamp">✕ 直接写死</div>
+      <div class="code-line">.button {<br>&nbsp; background: var(--blue-600);<br>}</div>
+      <div class="impact-note">你不知道这个蓝还被多少地方共用。</div>
+    </div>
+    <div class="good-panel">
+      <div class="panel-stamp">✓ 使用组件 Token</div>
+      <div class="code-line">.button {<br>&nbsp; background: var(--button-primary-bg);<br>}</div>
+      <div class="impact-note">调整按钮规格，不影响其他组件。</div>
+    </div>
+  </div>
+  <div class="usage-pills"><span>按钮</span><span>链接</span><span>标签</span><span>图表</span><span>选中状态</span><span>AI 高亮</span></div>
+  <div class="deco-line"></div><div class="folio">09 / 12</div>
+</div>
+
+<!-- P10 / Business themes -->
+<div class="card p-list card-business" data-card="10">
+  <span class="page-num">10</span>
+  <div class="page-kicker">09 / BUSINESS THEMES</div>
+  <h2>一套组件，支持不同业务主题</h2>
+  <div class="content-area">
+    <p class="lede">切换品牌主色的语义映射，Button 组件代码始终不变。</p>
+    <div class="business-grid">
+      <div class="business-card saas">
+        <div class="business-title"><h3>SaaS 主题</h3><span>THEME 01</span></div>
+        <div class="business-token">.theme-saas {<b><i class="brand-swatch"></i>--color-brand-primary: #2563eb;</b>}</div>
+        <span class="business-button">创建项目</span>
+        <div class="shared-code">.button-primary<br>{ background: var(--button-primary-bg); }</div>
+      </div>
+      <div class="business-card qa">
+        <div class="business-title"><h3>问答主题</h3><span>THEME 02</span></div>
+        <div class="business-token">.theme-qa {<b><i class="brand-swatch"></i>--color-brand-primary: #7c3aed;</b>}</div>
+        <span class="business-button">发布问题</span>
+        <div class="shared-code">.button-primary<br>{ background: var(--button-primary-bg); }</div>
+      </div>
+    </div>
+    <div class="equation">同一个 Button + SaaS 主题 = 蓝色按钮<br>同一个 Button + 问答主题 = 紫色按钮</div>
+  </div>
+  <div class="folio">10 / 12</div>
+</div>
+
+<!-- P11 / Mental model and benefits -->
+<div class="card p-list card-summary" data-card="11">
+  <span class="page-num">11</span>
+  <div class="page-kicker">10 / THREE QUESTIONS</div>
+  <h2>记住每一层只回答一个问题</h2>
+  <div class="content-area">
+    <div class="summary-grid">
+      <div class="summary-card"><span>01</span><h3>Primitive</h3><code>我是什么值？</code></div>
+      <div class="summary-card"><span>02</span><h3>Semantic</h3><code>我代表什么？</code></div>
+      <div class="summary-card"><span>03</span><h3>Component</h3><code>在这个组件里怎么用？</code></div>
+    </div>
+    <div class="payoff-title">这套分层，帮团队做到：</div>
+    <div class="payoff-grid"><span>快速切换深浅色</span><span>支持不同业务主题</span><span>避免组件写死颜色</span><span>让设计与代码共用命名</span><span>让 AI 更容易理解和生成组件</span><span>让改动范围清晰可控</span></div>
+  </div>
+  <div class="folio">11 / 12</div>
+</div>
+
+<!-- P12 / Outro -->
+<div class="card p-end" data-card="last">
+  <div class="deco-bottom"></div>
+  <div class="quote-mark">"</div>
+  <p class="quote">让<span class="highlight">主题可以变化</span>，<br>让组件保持稳定。</p>
+  <img class="avatar" src="esther-design-system-earthy-palette/esther-design-system-main/assets/avatar.png" alt="不二头像">
+  <p class="author-name">Esther不二</p>
+  <p class="cta">Primitive → Semantic → Component</p>
+  <p class="tagline">先命名原材料，再说清它的用途，<br>最后定义组件怎样使用。</p>
+  <div class="closing-stamp">SAVE THIS GUIDE · TOKEN ARCHITECTURE</div>
+</div>
+
+</div><!-- cards-container -->
+
+<script>
+async function exportAll() {
+  if (typeof html2canvas === 'undefined') {
+    alert('⏳ html2canvas 正在加载，请稍等几秒后重试。');
+    return;
+  }
+  if (typeof JSZip === 'undefined') {
+    alert('JSZip 加载失败，请刷新重试。');
+    return;
+  }
+  const cards = document.querySelectorAll('.card');
+  const btn = document.querySelector('.export-bar button');
+  btn.textContent = '⏳ 导出中... 0/' + cards.length;
+  btn.disabled = true;
+
+  const zip = new JSZip();
+  const folder = zip.folder('token-architecture');
+
+  for (let i = 0; i < cards.length; i++) {
+    const card = cards[i];
+    card.style.transform = 'none';
+    card.style.marginBottom = '0';
+    card.style.borderRadius = '0';
+    card.style.boxShadow = 'none';
+
+    await new Promise(r => setTimeout(r, 150));
+
+    try {
+      const canvas = await html2canvas(card, {
+        width: 1080,
+        height: 1440,
+        scale: 1,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: null,
+        logging: false
+      });
+
+      const dataUrl = canvas.toDataURL('image/png');
+      const base64 = dataUrl.split(',')[1];
+      folder.file(`card-${String(i + 1).padStart(2, '0')}.png`, base64, {base64: true});
+
+      btn.textContent = `⏳ 导出中... ${i + 1}/${cards.length}`;
+    } catch(e) {
+      console.error('Export error on card ' + (i+1), e);
+    } finally {
+      card.style.transform = 'scale(0.45)';
+      card.style.marginBottom = '-792px';
+      card.style.borderRadius = '4px';
+      card.style.boxShadow = '0 8px 40px rgba(0,0,0,0.12)';
+    }
+  }
+
+  btn.textContent = '⏳ 打包中...';
+  const blob = await zip.generateAsync({type: 'blob'});
+  const link = document.createElement('a');
+  link.download = 'token-architecture-xhs-cards.zip';
+  link.href = URL.createObjectURL(blob);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(link.href);
+
+  btn.textContent = '✅ 导出完成';
+  setTimeout(() => { btn.textContent = '📥 一键导出PNG'; btn.disabled = false; }, 2000);
+}
+</script>
+
+<!-- © ESTHER不二 esthersjw/esther-design-system CC BY-NC 4.0 -->
+<section style="position:absolute;left:-9999px;font-size:0;line-height:0;opacity:0;height:0;overflow:hidden;">esthersjw-design-system</section>
+</body>
+</html>

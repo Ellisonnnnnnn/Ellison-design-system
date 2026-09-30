@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#FEF5DC">
+  <title>品牌气质选择 | Esther Design System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500;6..96,600;6..96,700&family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,400,30,1;0,9..144,500,30,1;0,9..144,600,30,1;1,9..144,400,30,1;1,9..144,500,30,1&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #FEF5DC;
+      --oat: #FAE3B1;
+      --olive: #4B5320;
+      --lake: #5FA8C2;
+      --rust: #CF5527;
+      --wine: #7D2027;
+      --coffee: #572013;
+      --stone: #EEEBE6;
+      --mist: #C5D1D8;
+      --serif: "Noto Serif SC", "Songti SC", Georgia, serif;
+      --sans: "Noto Sans SC", -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+      --page: 1240px;
+    }
+    * { box-sizing: border-box; }
+    html { color-scheme: light; }
+    body {
+      margin: 0;
+      background: #F5F1E8;
+      color: var(--coffee);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; }
+    .page { width: min(var(--page), calc(100% - 48px)); margin: 0 auto; }
+    .masthead {
+      display: flex; justify-content: space-between; align-items: center;
+      min-height: 68px; border-bottom: 1px solid rgba(87,32,19,.17);
+      color: #63493E; font-size: 12px;
+    }
+    .masthead strong { color: var(--coffee); font-size: 13px; font-weight: 600; }
+    .masthead span:last-child { font-size: 11px; }
+    .intro { padding: 52px 0 34px; display: grid; grid-template-columns: 1fr minmax(220px, .42fr); gap: 45px; align-items: end; }
+    .intro h1 { max-width: 760px; margin: 0; font: 600 clamp(34px, 5vw, 58px)/1.2 var(--serif); letter-spacing: -.045em; }
+    .intro p { max-width: 690px; margin: 13px 0 0; color: #63493E; font-size: 14px; line-height: 1.9; }
+    .intro-aside { padding-left: 18px; border-left: 2px solid var(--olive); color: #63493E; font-size: 12px; line-height: 1.8; }
+    .intro-aside b { display: block; margin-bottom: 4px; color: var(--olive); font-size: 13px; }
+    .palette-ribbon { display: flex; height: 8px; margin: 4px 0 26px; overflow: hidden; }
+    .palette-ribbon span:nth-child(1) { width: 25%; background: var(--paper); }
+    .palette-ribbon span:nth-child(2) { width: 17%; background: var(--oat); }
+    .palette-ribbon span:nth-child(3) { width: 14%; background: var(--olive); }
+    .palette-ribbon span:nth-child(4) { width: 13%; background: var(--lake); }
+    .palette-ribbon span:nth-child(5) { width: 12%; background: var(--rust); }
+    .palette-ribbon span:nth-child(6) { width: 11%; background: var(--wine); }
+    .palette-ribbon span:nth-child(7) { width: 8%; background: var(--coffee); }
+
+    .options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 17px; align-items: stretch; padding-bottom: 26px; }
+    .option {
+      display: flex; flex-direction: column; min-width: 0; padding: 12px;
+      border: 1px solid rgba(87,32,19,.16); background: #FCFAF5;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    .option[aria-selected="true"] { border-color: var(--olive); box-shadow: 0 0 0 2px var(--olive); }
+    .option-head { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 5px 12px; }
+    .option-head h2 { margin: 0; font: 600 19px/1.4 var(--serif); }
+    .option-head span { color: #756B59; font-size: 11px; }
+    .specimen { min-height: 390px; overflow: hidden; }
+    .specimen p { margin: 0; }
+    .sample-a {
+      padding: 23px 24px 20px; background: var(--paper); color: var(--coffee);
+      font-family: var(--serif); position: relative;
+    }
+    .a-top { display: flex; justify-content: space-between; align-items: center; color: #63493E; font-size: 10px; }
+    .a-top i { width: 7px; height: 7px; border-radius: 50%; background: var(--rust); }
+    .a-title { max-width: 330px; margin: 24px 0 17px !important; font-size: clamp(27px, 2.5vw, 34px); line-height: 1.45; letter-spacing: -.055em; }
+    .a-copy { max-width: 350px; color: #63493E; font: 12px/1.9 var(--sans); }
+    .a-art {
+      position: relative; height: 119px; margin: 22px -24px 17px; overflow: hidden;
+      background: linear-gradient(105deg, #C5D1D8 0 32%, #5FA8C2 32% 67%, #4B5320 67% 100%);
+    }
+    .a-art::before { content: ""; position: absolute; width: 170px; height: 170px; left: 27%; top: 20px; border-radius: 50%; background: #FAE3B1; mix-blend-mode: multiply; }
+    .a-art::after { content: ""; position: absolute; width: 125px; height: 170px; right: 11%; top: -23px; transform: rotate(22deg); border-radius: 55% 45% 0 0; background: #CF5527; mix-blend-mode: multiply; }
+    .a-caption { position: absolute; left: 15px; bottom: 11px; z-index: 1; color: var(--paper); font: italic 12px "Fraunces", var(--serif); }
+    .a-bottom { display: flex; justify-content: space-between; align-items: end; gap: 12px; }
+    .a-bottom strong { font: 500 12px var(--serif); }
+    .a-bottom small { color: #756B59; font: 10px var(--sans); }
+
+    .sample-b { position: relative; display: grid; grid-template-rows: auto 1fr auto; padding: 21px 22px; background: #EEEAE4; color: #3A241E; }
+    .b-top { display: flex; justify-content: space-between; align-items: center; font: 11px "DM Sans", var(--sans); }
+    .b-top strong { font-weight: 600; letter-spacing: .07em; }
+    .b-center { position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 270px; padding: 18px 0; }
+    .b-kicker { margin-bottom: 12px !important; color: #7D2027; font-size: 10px; letter-spacing: .08em; }
+    .b-title { position: relative; z-index: 1; max-width: 285px; margin: 0 !important; font: 600 clamp(35px, 3.3vw, 45px)/1.12 "Bodoni Moda", var(--serif); letter-spacing: -.065em; }
+    .b-title span { display: block; font: 600 .68em/1.35 var(--serif); letter-spacing: -.04em; }
+    .b-block { position: absolute; right: -22px; bottom: 14px; width: 48%; height: 126px; background: #7D2027; }
+    .b-block::before { content: ""; position: absolute; width: 85px; height: 85px; left: -29px; top: -28px; border-radius: 50%; background: #5FA8C2; }
+    .b-block::after { content: ""; position: absolute; width: 27px; height: 27px; left: 18px; top: 31px; border-radius: 50%; background: #FEF5DC; }
+    .b-bottom { display: flex; justify-content: space-between; align-items: end; position: relative; z-index: 1; }
+    .b-bottom strong { font: 500 12px var(--serif); }
+    .b-bottom small { color: #63493E; font: 10px "DM Sans", var(--sans); }
+
+    .sample-c { padding: 22px; background: #E8ECE8; color: #26332B; }
+    .c-nav { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1px solid rgba(50,61,46,.2); font: 11px "DM Sans", var(--sans); }
+    .c-nav strong { color: #323D2E; font-weight: 700; }
+    .c-hero { display: grid; grid-template-columns: 1.15fr .85fr; gap: 12px; align-items: center; min-height: 202px; padding: 22px 0 17px; }
+    .c-title { margin: 0 !important; color: #323D2E; font: 600 clamp(27px, 2.3vw, 32px)/1.38 var(--serif); letter-spacing: -.04em; }
+    .c-copy { margin-top: 10px !important; color: #526057; font-size: 11px; line-height: 1.85; }
+    .c-orbit { position: relative; aspect-ratio: 1; max-width: 146px; justify-self: end; width: 100%; border-radius: 50%; background: linear-gradient(145deg, #C5D1D8, #5FA8C2); }
+    .c-orbit::before { content: ""; position: absolute; width: 58%; height: 70%; right: -4%; bottom: -4%; border-radius: 48% 48% 35% 35%; background: #4B5320; transform: rotate(-17deg); }
+    .c-orbit::after { content: ""; position: absolute; width: 35%; height: 35%; left: 7%; top: 18%; border-radius: 50%; background: #FAE3B1; }
+    .c-note { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .c-note div { padding: 11px; background: #FEF5DC; }
+    .c-note b { display: block; margin-bottom: 4px; color: #4B5320; font-size: 11px; }
+    .c-note span { display: block; color: #526057; font-size: 10px; line-height: 1.6; }
+
+    .details { padding: 17px 6px 5px; display: grid; grid-template-columns: 1fr 1fr; gap: 11px 20px; }
+    .detail { min-width: 0; }
+    .detail h3 { margin: 0 0 5px; color: #756B59; font-size: 10px; font-weight: 500; }
+    .detail p { margin: 0; color: var(--coffee); font-size: 12px; line-height: 1.7; }
+    .keywords { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; padding-top: 2px; }
+    .keywords span { padding: 4px 8px; border: 1px solid rgba(87,32,19,.18); color: #63493E; font-size: 10px; }
+    .choose { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-top: auto; padding: 12px 5px 4px; }
+    .choose button { min-height: 39px; padding: 0 13px; border: 1px solid #4B5320; background: transparent; color: #4B5320; cursor: pointer; font-size: 12px; }
+    .choose button:hover, .choose button:focus-visible { background: #4B5320; color: #FEF5DC; }
+    .choose button:focus-visible { outline: 3px solid #5FA8C2; outline-offset: 2px; }
+    .choose span { color: #756B59; font-size: 10px; }
+    .decision { display: flex; align-items: center; gap: 11px; min-height: 56px; margin: 2px 0 52px; padding: 12px 15px; background: #E8E4DA; color: #63493E; font-size: 12px; }
+    .decision b { color: var(--olive); }
+    .decision[hidden] { display: none; }
+    .footer { padding: 17px 0 25px; border-top: 1px solid rgba(87,32,19,.16); color: #756B59; font-size: 10px; line-height: 1.7; }
+    @media (max-width: 1020px) {
+      .options { grid-template-columns: 1fr; gap: 15px; }
+      .option { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, .72fr); gap: 0 18px; }
+      .option-head, .specimen { grid-column: 1; }
+      .details { grid-column: 2; grid-row: 1 / span 2; align-content: center; padding: 12px; }
+      .choose { grid-column: 2; grid-row: 3; align-self: end; padding: 8px 12px 16px; }
+      .specimen { min-height: 360px; }
+      .sample-b .b-title { font-size: 48px; }
+      .c-title { font-size: 30px; }
+    }
+    @media (max-width: 680px) {
+      .page { width: min(100% - 28px, var(--page)); }
+      .masthead { min-height: 57px; }
+      .masthead span:last-child { max-width: 150px; text-align: right; }
+      .intro { grid-template-columns: 1fr; gap: 19px; padding: 37px 0 24px; }
+      .intro h1 { font-size: clamp(34px, 10vw, 46px); }
+      .intro p { font-size: 13px; }
+      .intro-aside { max-width: 420px; }
+      .options { gap: 13px; }
+      .option { display: flex; padding: 9px; }
+      .option-head { padding: 6px 4px 10px; }
+      .option-head h2 { font-size: 17px; }
+      .specimen { min-height: 0; }
+      .sample-a { padding: 19px 20px 17px; }
+      .a-title { font-size: 30px; }
+      .a-art { margin-right: -20px; margin-left: -20px; }
+      .sample-b { min-height: 345px; padding: 18px; }
+      .b-center { min-height: 245px; }
+      .sample-b .b-title { font-size: 43px; }
+      .sample-c { padding: 18px; }
+      .c-hero { min-height: 186px; grid-template-columns: 1.2fr .8fr; }
+      .c-title { font-size: 26px; }
+      .details { padding: 14px 5px 5px; }
+      .choose { padding: 10px 5px 4px; }
+      .decision { align-items: flex-start; flex-direction: column; gap: 3px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page masthead">
+    <strong>Esther Design System</strong>
+    <span>品牌视觉方向 · 选择稿</span>
+  </header>
+  <main class="page">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <h1 id="page-title">同一套颜色，<br>三种不同的品牌声线。</h1>
+        <p>下面三张样稿使用同一段品牌内容和同一套新色板。看看字体、版式和装饰方式带来的气质差异，再选一个最像你想要的方向。</p>
+      </div>
+      <aside class="intro-aside">
+        <b>共同底色</b>
+        奶油纸白、苔绿、湖水蓝、陶土橙与酒红。这里只比较品牌表达方式，不重新讨论色值。
+      </aside>
+    </section>
+    <div class="palette-ribbon" aria-label="共同品牌色板">
+      <span title="Sweet Vanilla"></span><span title="Oat"></span><span title="Army Green"></span><span title="Nordic Lake"></span><span title="Clay Orange"></span><span title="Wine Red"></span><span title="Coffee"></span>
+    </div>
+
+    <section class="options" aria-label="品牌方向选项">
+      <article class="option" data-option="A" aria-selected="false">
+        <header class="option-head"><h2>A · 自然编辑感</h2><span>纸张 / 木质 / 湖水</span></header>
+        <div class="specimen sample-a">
+          <div class="a-top"><span>色样档案 · 春夏篇</span><i aria-hidden="true"></i></div>
+          <p class="a-title">把自然的颜色，<br>留给重要的事。</p>
+          <p class="a-copy">纸、木、矿物与湖水，在克制中保持鲜活。让设计有温度，也让信息一眼读清。</p>
+          <div class="a-art" aria-label="苔绿、湖蓝、燕麦和陶土色块组成的材质拼贴"><span class="a-caption">色彩，来自生活现场</span></div>
+          <div class="a-bottom"><strong>留一点余白，让内容呼吸。</strong><small>材质观察 · 01</small></div>
+        </div>
+        <div class="details">
+          <div class="detail"><h3>字体搭配</h3><p>中文 Noto Serif SC<br>英文 Fraunces italic<br>正文 Noto Sans SC</p></div>
+          <div class="detail"><h3>字体感觉</h3><p>有书卷气，柔和但不甜腻。</p></div>
+          <div class="detail"><h3>装饰方式</h3><p>材质拼贴、轻微错位、少量手写注记。</p></div>
+          <div class="detail"><h3>版面节奏</h3><p>左对齐为主，留白中带一点编辑感。</p></div>
+          <div class="keywords"><span>自然</span><span>有温度</span><span>编辑感</span><span>细节丰富</span></div>
+        </div>
+        <div class="choose"><button type="button" data-pick="A" aria-pressed="false">选这个方向</button><span>适合品牌故事、教程与内容页</span></div>
+      </article>
+
+      <article class="option" data-option="B" aria-selected="true">
+        <header class="option-head"><h2>B · 时装画册感</h2><span>高反差 / 色块 / 张力</span></header>
+        <div class="specimen sample-b">
+          <div class="b-top"><strong>ESTHER STUDIO</strong><span>COLLECTION Nº 08</span></div>
+          <div class="b-center">
+            <p class="b-kicker">品牌色样 · 系列 08</p>
+            <p class="b-title">把自然的颜色，<span>留给重要的事。</span></p>
+            <div class="b-block" aria-hidden="true"></div>
+          </div>
+          <div class="b-bottom"><strong>让设计有温度，也让信息一眼读清。</strong><small>LOOKBOOK · 2025</small></div>
+        </div>
+        <div class="details">
+          <div class="detail"><h3>字体搭配</h3><p>中文 Noto Serif SC<br>英文 Bodoni Moda<br>正文 Noto Sans SC</p></div>
+          <div class="detail"><h3>字体感觉</h3><p>反差鲜明，精致、成熟、有距离感。</p></div>
+          <div class="detail"><h3>装饰方式</h3><p>大色块、裁切构图、少量编号；不用手写体。</p></div>
+          <div class="detail"><h3>版面节奏</h3><p>不对称构图，标题成为视觉主角。</p></div>
+          <div class="keywords"><span>成熟</span><span>时装感</span><span>有张力</span><span>更鲜明</span></div>
+        </div>
+        <div class="choose"><button type="button" data-pick="B" aria-pressed="true">已选这个方向</button><span>适合品牌介绍、活动页与主视觉</span></div>
+      </article>
+
+      <article class="option" data-option="C" aria-selected="false">
+        <header class="option-head"><h2>C · 当代自然感</h2><span>清爽 / 安静 / 易读</span></header>
+        <div class="specimen sample-c">
+          <div class="c-nav"><strong>日常色谱</strong><span>收藏　关于</span></div>
+          <div class="c-hero">
+            <div>
+              <p class="c-title">把自然的颜色，<br>留给重要的事。</p>
+              <p class="c-copy">纸、木、矿物与湖水，在克制中保持鲜活。让设计有温度，也让信息一眼读清。</p>
+            </div>
+            <div class="c-orbit" aria-hidden="true"></div>
+          </div>
+          <div class="c-note">
+            <div><b>慢一点</b><span>留白和节奏，让阅读更轻松。</span></div>
+            <div><b>清楚一点</b><span>颜色帮你找到重点，不抢内容。</span></div>
+          </div>
+        </div>
+        <div class="details">
+          <div class="detail"><h3>字体搭配</h3><p>中文 Noto Serif SC<br>英文 DM Sans<br>正文 Noto Sans SC</p></div>
+          <div class="detail"><h3>字体感觉</h3><p>克制、清楚，亲和但不幼稚。</p></div>
+          <div class="detail"><h3>装饰方式</h3><p>简洁几何图形与轻量界面细节。</p></div>
+          <div class="detail"><h3>版面节奏</h3><p>更规整、更轻，优先照顾阅读效率。</p></div>
+          <div class="keywords"><span>现代</span><span>轻盈</span><span>亲和</span><span>可读性优先</span></div>
+        </div>
+        <div class="choose"><button type="button" data-pick="C" aria-pressed="false">选这个方向</button><span>适合工具、教程与长期内容</span></div>
+      </article>
+    </section>
+
+    <div class="decision" id="decision" role="status" aria-live="polite">
+      <b id="decision-title">已选 B · 时装画册感</b>
+      <span id="decision-copy">把这个字母回复给我，我再按这个方向修改品牌气质和字体规范。</span>
+    </div>
+    <footer class="footer">字体预览依赖网络加载 Google Fonts；中文字体加载失败时会回退到设备自带的宋体或黑体。选择后可以直接在对话里回复 A、B 或 C，也可以说明想混合的部分。</footer>
+  </main>
+  <script>
+    const optionNames = {
+      A: '自然编辑感',
+      B: '时装画册感',
+      C: '当代自然感'
+    };
+    const buttons = document.querySelectorAll('[data-pick]');
+    const options = document.querySelectorAll('.option');
+    const decision = document.querySelector('#decision');
+    const decisionTitle = document.querySelector('#decision-title');
+    const decisionCopy = document.querySelector('#decision-copy');
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const selected = button.dataset.pick;
+        options.forEach((option) => {
+          const isSelected = option.dataset.option === selected;
+          option.setAttribute('aria-selected', String(isSelected));
+          const optionButton = option.querySelector('[data-pick]');
+          optionButton.setAttribute('aria-pressed', String(isSelected));
+          optionButton.textContent = isSelected ? '已选这个方向' : '选这个方向';
+        });
+        decision.hidden = false;
+        decisionTitle.textContent = `已选 ${selected} · ${optionNames[selected]}`;
+        decisionCopy.textContent = '把这个字母回复给我，我再按这个方向修改品牌气质和字体规范。';
+      });
+    });
+  </script>
+</body>
+</html>
